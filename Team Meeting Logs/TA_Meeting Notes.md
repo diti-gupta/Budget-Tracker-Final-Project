@@ -1,4 +1,4 @@
-Meeting #1 (17 minutes long):
+Meeting #1 with Shipra (17 minutes long):
  
 Discussed Lab 10 deliverables:         
     - Completed (1-4) deliverables
