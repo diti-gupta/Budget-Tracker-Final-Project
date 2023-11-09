@@ -45,10 +45,25 @@
       extended: true,
     })
   );
+
+  const user = {
+    username: undefined,
+    password: undefined,
+  };
   
   app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
+
+  app.post('/login', async (req,res)=>{
+    if(/*check if the input is a string*/){ 
+      res.json({status: 'success', message: 'Success'});
+    }
+    else{ //if not a string, send failure
+      res.json({status: 'fail', message: 'Invalid Input'});
+    }
+    
+});
 
 module.exports = app.listen(3000);
 console.log("Server is listening on port 3000");
