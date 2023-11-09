@@ -48,5 +48,6 @@ We plan to meet on Mondays at 12 pm in CSEL. The modality will be in person, and
 Added as a pdf in the Milestone Submissions folder
 
 12. Wireframes​
+Added as a pdf in the Milestone Submissions folder. 
 
 
