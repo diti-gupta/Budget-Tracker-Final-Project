@@ -1,1 +1,27 @@
-v class="col"><%- include ('../partials/message') %></div>
+<div class="col"><%- include ('../partials/message') %></div>
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    <h1>Login</h1>
+    <form action="/login" method="POST">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <input type="submit" value="Login">
+    </div>
+  </form>
+  <p>If you don't have an account, <a href="/register">register here</a>.</p>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
+<div class="col"><%- include ('../partials/message') %></div>
