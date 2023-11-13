@@ -23,15 +23,15 @@ describe('Server!', () => {
       });
   });
 
-  // ===========================================================================
-  // TO-DO: Part A Login unit test case
-  //We are checking POST /add_user API by passing the user info in the correct order. This test case should pass and return a status 200 along with a "Success" message.
-//Positive cases
+//   ===========================================================================
+//   TO-DO: Part A Login unit test case
+//   We are checking POST /add_user API by passing the user info in the correct order. This test case should pass and return a status 200 along with a "Success" message.
+// Positive cases
 it('positive : /login', done => {
     chai
       .request(server)
       .post('/login')
-      .send({username: 'John Doe', password: 'abcdef'})
+      .send({username: 'user3', password: 'abcdef'})
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.message).to.equals('Success');
@@ -51,4 +51,4 @@ it('Negative : /login. Checking invalid name', done => {
         expect(res.body.message).to.equals('Invalid input');
         done();
       });
-  });
+});

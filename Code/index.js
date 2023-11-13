@@ -57,16 +57,30 @@
     res.json({status: 'success', message: 'Welcome!'});
   });
 
-  app.post('/login', async (req,res)=>{
-    if(/*check if the input is a string*/){ 
-      res.json({status: 'success', message: 'Success'});
+  app.get('/register', (req, res) => {
+    res.render('pages/register'); // Render the register.ejs page
+  });
+  
+  //POST register 
+  app.post('/register', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+  
+      // Hash the password using bcrypt
+      const hashedPassword = await bcrypt.hash(password, 10); 
+  
+      // Insert the username and hashed password into the users table
+      const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+      const values = [username, hashedPassword];
+      await db.none(query, values);
+  
+      // Redirect to the login page after successful registration
+      res.redirect('/login');
+    } catch (error) {
+      // If the registration fails, redirect back to the registration page
+      res.redirect('/register');
     }
-    else{ //if not a string, send failure
-      res.json({status: 'fail', message: 'Invalid Input'});
-    }
-    
-});
-
+  });
   
   app.post('/login', async (req,res)=>{
     try {
@@ -87,13 +101,13 @@
       // Use bcrypt.compare to check if the entered password matches the hashed password in the database
       console.log("user.password length:", user.password);
       console.log("actual password length", password);
-      const passwordMatch = (password == user.password);
+      const passwordMatch = await bcrypt.compare(password,user.password);
 
       console.log("DOES password MATCH?", passwordMatch);
       if (!passwordMatch) {
         // If the password is incorrect, throw an error and redirect to login
         console.log("passwords don't match!")
-        throw new Error('Incorrect username or password');
+        throw new Error('Invalid input');
       }
   
       // Save the user in the session
@@ -101,11 +115,11 @@
       console.log("username & password validated!!");
       req.session.save(() => {
         // Redirect to the /register for now TBD route after setting the session
-        res.redirect('/register');
+        res.status(200).json({message:'Success'});
       });
     } catch (error) {
       // If the database request fails or if there is an incorrect password, handle the error
-      res.render('pages/login', { error: error.message }); // Render the login page with an error message
+      res.status(200).json({message:'Invalid input'}); // Render the login page with an error message
     }
     // Authentication Middleware.
   const auth = (req, res, next) => {
