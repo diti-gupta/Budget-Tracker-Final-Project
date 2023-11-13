@@ -92,6 +92,7 @@
 
       // Find the user from the users table
       const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+      console.log(user);
       if (!user) {
         // If the user is not found, redirect to the registration page
         console.log("In ! user");
