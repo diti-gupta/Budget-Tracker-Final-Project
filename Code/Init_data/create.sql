@@ -3,3 +3,4 @@ CREATE TABLE users (
     password CHAR(60) NOT NULL,
     username VARCHAR(50) PRIMARY KEY
 );
+
