@@ -102,7 +102,9 @@
       // Use bcrypt.compare to check if the entered password matches the hashed password in the database
       console.log("user.password length:", user.password);
       console.log("actual password length", password);
-      const passwordMatch = await bcrypt.compare(password,user.password);
+      const hashedPassword = await bcrypt.hash(password, 10);
+      console.log("hashedPassword: ", hashedPassword);
+      const passwordMatch = await bcrypt.compare(password, user.password);
 
       console.log("DOES password MATCH?", passwordMatch);
       if (!passwordMatch) {
