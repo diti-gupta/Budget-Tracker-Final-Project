@@ -70,79 +70,78 @@
   app.post('/register', async (req, res) => {
     try {
       const { username, password } = req.body;
-
-      
-      if (!username || !password) 
-      {
-        //TBD
-        throw new Error('Username and password are required.'); // Simulated a negative test case based on this
-      }
-
-      //check if the user already exists and if so, redirect to login page
+  
+      // Check if the username already exists in the database
       const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [username]);
-      if (existingUser) 
-      {
-        // If the username exists, redirect to login with a message
-        res.status(200).json({message:'User already exists.'}); // Render the login page with an error message
-        return res.redirect('/login');
-      }
-
       
+  
+      if (existingUser) {
+        console.log("in existeing user", existingUser);
+        // If the username exists, redirect to login with a message
+        throw new Error("Account already exists");
+        
+      }
+  
       // Hash the password using bcrypt
-      const hashedPassword = await bcrypt.hash(password, 10); 
+      const hashedPassword = await bcrypt.hash(password, 10);
   
       // Insert the username and hashed password into the users table
       const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+      console.log("inserting", query);
       const values = [username, hashedPassword];
+      console.log("values", values);
       await db.none(query, values);
   
-      // Redirect to the login page and have status success after successful registration
-      res.status(200).json({message:'Successfull Registration'});
-      res.redirect('/login');
+      // Redirect to the login page after successful registration
+      // res.redirect('/login');
+      res.status(200).json({message:'Successful Registration'});
     } 
     
     catch (error) 
     {
-      // If the registration fails, redirect back to the registration page and print error message 
-      res.redirect('/register');
-      res.status(200).json({message:'Please input missing fields from Username or Password'}); // Render the login page with an error message
+      console.log("in catch error: account exists");
+      // Log the error for debugging purposes
+        res.status(200).json({message: 'Account already exists' });
+  
+      // Redirect to the registration page with an error message
+      // res.redirect('/register');
     }
   });
-  
+
   app.post('/login', async (req,res)=>{
     try {
       const { username, password } = req.body;
       
       //DG
-      console.log("In app.post login");
-      console.log(username, password);
+      // console.log("In app.post login");
+      // console.log(username, password);
 
       // Find the user from the users table
       const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
-      console.log(user);
+      // console.log(user);
       if (!user) {
         // If the user is not found, redirect to the registration page
-        console.log("In ! user");
+        // console.log("In ! user");
         return res.redirect('/register');
       }
   
       // Use bcrypt.compare to check if the entered password matches the hashed password in the database
-      console.log("user.password length:", user.password);
-      console.log("actual password length", password);
+      // console.log("user.password length:", user.password);
+      // console.log("actual password length", password);
       const hashedPassword = await bcrypt.hash(password, 10);
-      console.log("hashedPassword: ", hashedPassword);
+      // console.log("hashedPassword: ", hashedPassword);
       const passwordMatch = await bcrypt.compare(password, user.password);
 
-      console.log("DOES password MATCH?", passwordMatch);
+      // console.log("DOES password MATCH?", passwordMatch);
       if (!passwordMatch) {
         // If the password is incorrect, throw an error and redirect to login
-        console.log("passwords don't match!")
+        // console.log("passwords don't match!")
         throw new Error('Invalid input');
       }
   
       // Save the user in the session
       req.session.user = user;
-      console.log("username & password validated!!");
+      // console.log("username & password validated!!");
       req.session.save(() => {
         // Redirect to the /register for now TBD route after setting the session
         res.status(200).json({message:'Success'});
