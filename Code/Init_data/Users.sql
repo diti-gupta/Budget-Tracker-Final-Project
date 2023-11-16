@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE Users (
+    Username VARCHAR(60) PRIMARY KEY,
+    Password VARCHAR(60) NOT NULL
+);
+
+
