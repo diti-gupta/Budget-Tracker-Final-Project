@@ -52,3 +52,32 @@ it('Negative : /login. Checking invalid name', done => {
         done();
       });
 });
+
+// Part B Register unit test case
+//   We are checking POST /register API by registering a user with valid data. This test case should pass and return a status 200 along with a "Success" message and redirect to the login page.
+// Positive cases
+it('positive : /register', done => {
+  chai
+    .request(server)
+    .post('/register')
+    .send({username: 'user10', password: 'abcd'})
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body.message).to.equals('Successfull Registration');
+      expect(res.header.location).to.equal('/login'); // Ensure the redirection to the login page
+      done();
+    });
+});
+
+it('Negative : /register. Checking existing username', done => {
+  chai
+    .request(server)
+    .post('/register')
+    .send({username: 'user8', password: '$2b$10$AOC7paRUgmHE.lZe1yTlmeVNRA5bTFbMNI35CtTg767QzA1ngVVEW'})
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body.message).to.equals('User already exists.');
+      expect(res.header.location).to.equal('/login'); // Ensure redirection with the correct message
+      done();
+    });
+});

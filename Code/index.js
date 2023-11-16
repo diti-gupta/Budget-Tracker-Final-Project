@@ -57,6 +57,11 @@
     res.json({status: 'success', message: 'Welcome!'});
   });
 
+  app.get('/login', (req,res)=>
+  {
+    res.render('pages/register'); //render the login.ejs page
+  });
+
   app.get('/register', (req, res) => {
     res.render('pages/register'); // Render the register.ejs page
   });
@@ -65,7 +70,24 @@
   app.post('/register', async (req, res) => {
     try {
       const { username, password } = req.body;
-  
+
+      
+      if (!username || !password) 
+      {
+        //TBD
+        throw new Error('Username and password are required.'); // Simulated a negative test case based on this
+      }
+
+      //check if the user already exists and if so, redirect to login page
+      const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [username]);
+      if (existingUser) 
+      {
+        // If the username exists, redirect to login with a message
+        res.status(200).json({message:'User already exists.'}); // Render the login page with an error message
+        return res.redirect('/login');
+      }
+
+      
       // Hash the password using bcrypt
       const hashedPassword = await bcrypt.hash(password, 10); 
   
@@ -74,11 +96,16 @@
       const values = [username, hashedPassword];
       await db.none(query, values);
   
-      // Redirect to the login page after successful registration
+      // Redirect to the login page and have status success after successful registration
+      res.status(200).json({message:'Successfull Registration'});
       res.redirect('/login');
-    } catch (error) {
-      // If the registration fails, redirect back to the registration page
+    } 
+    
+    catch (error) 
+    {
+      // If the registration fails, redirect back to the registration page and print error message 
       res.redirect('/register');
+      res.status(200).json({message:'Please input missing fields from Username or Password'}); // Render the login page with an error message
     }
   });
   
