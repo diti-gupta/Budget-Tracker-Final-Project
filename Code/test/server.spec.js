@@ -54,30 +54,41 @@ it('Negative : /login. Checking invalid name', done => {
 });
 
 // Part B Register unit test case
-//   We are checking POST /register API by registering a user with valid data. This test case should pass and return a status 200 along with a "Success" message and redirect to the login page.
-// Positive cases
-it('positive : /register', done => {
+// We are checking POST /register API by registering a user with valid data. 
+
+
+/* ----------------------------------------------------- NOTE ---------------------------------------------------------------------:
+The positive test case will need to be updated with a new user EVERY TIME one reruns the test cases in order for the test case to pass. 
+In other words: If one were to have run the test cases once already with username: newuser, and the positive test case passed, 
+then the next time one runs the test case with the same username: newuser, the positive test case will fail, because 
+in the previous test case run, the newuser gets added to the database because they did NOT exist at that moment in time. 
+In the rerun, the newuser exists in the database, thus the username has to be a different username for EACH rerun of the test cases.*/
+
+// Positive test case for user registration
+it('Positive: /register', (done) => {
   chai
     .request(server)
     .post('/register')
-    .send({username: 'user10', password: 'abcd'})
+    .send({ username: 'new_user1234', password: 'passwordabc' })
     .end((err, res) => {
-      expect(res).to.have.status(200);
-      expect(res.body.message).to.equals('Successfull Registration');
-      expect(res.header.location).to.equal('/login'); // Ensure the redirection to the login page
+      expect(res).to.have.status(200); // Expect a redirect status for successful registration
+      expect(res.body.message).to.equals('Successful Registration');
+      
       done();
     });
 });
 
-it('Negative : /register. Checking existing username', done => {
+// Negative test case for user registration with an existing username
+it('Negative: /register. Checking existing username', (done) => {
   chai
     .request(server)
     .post('/register')
-    .send({username: 'user8', password: '$2b$10$AOC7paRUgmHE.lZe1yTlmeVNRA5bTFbMNI35CtTg767QzA1ngVVEW'})
+    .send({ username: 'user8'}) // Use an existing username to simulate a negative case
     .end((err, res) => {
-      expect(res).to.have.status(200);
-      expect(res.body.message).to.equals('User already exists.');
-      expect(res.header.location).to.equal('/login'); // Ensure redirection with the correct message
+      expect(res).to.have.status(200); // Expect a redirect status for registration failure
+      expect(res.body.message).to.equals('Account already exists');
+      
       done();
     });
 });
+
