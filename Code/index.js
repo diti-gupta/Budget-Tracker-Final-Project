@@ -52,34 +52,49 @@
     username: undefined,
     password: undefined,
   };
+
+
   
+  app.get("/",(req,res)=>{
+    res.render("pages/register");
+  
+  });
+
+  app.get("/logout", (req, res) => {
+    res.render("pages/logout");
+  });
+
+  app.get("/home", (req, res) => {
+    res.render("pages/home");
+  });
+
+
   app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
 
+  //LOGIN GET API
   app.get('/login', (req,res)=>
   {
-    res.render('pages/register'); //render the login.ejs page
+    res.render('pages/login'); //render the login.ejs page
   });
 
+  // REGISTER GET API
   app.get('/register', (req, res) => {
     res.render('pages/register'); // Render the register.ejs page
   });
   
-  //POST register 
+  //POST REGISTER API 
   app.post('/register', async (req, res) => {
     try {
       const { username, password } = req.body;
   
       // Check if the username already exists in the database
       const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [username]);
-      
-  
       if (existingUser) {
         console.log("in existeing user", existingUser);
         // If the username exists, redirect to login with a message
         throw new Error("Account already exists");
-        
       }
   
       // Hash the password using bcrypt
@@ -96,7 +111,6 @@
       // res.redirect('/login');
       res.status(200).json({message:'Successful Registration'});
     } 
-    
     catch (error) 
     {
       console.log("in catch error: account exists");
@@ -108,11 +122,11 @@
     }
   });
 
+  //LOGIN POST API
   app.post('/login', async (req,res)=>{
     try {
       const { username, password } = req.body;
-      
-      //DG
+
       // console.log("In app.post login");
       // console.log(username, password);
 
@@ -141,6 +155,7 @@
   
       // Save the user in the session
       req.session.user = user;
+      console.log("in login saving user  :", req.session.user);
       // console.log("username & password validated!!");
       req.session.save(() => {
         // Redirect to the /register for now TBD route after setting the session
@@ -150,19 +165,86 @@
       // If the database request fails or if there is an incorrect password, handle the error
       res.status(200).json({message:'Invalid input'}); // Render the login page with an error message
     }
-    // Authentication Middleware.
-  const auth = (req, res, next) => {
-    if (!req.session.user) {
-      // Default to login page.
-      return res.redirect('/login');
-    }
-    next();
-  };
-  
-  // Authentication Required
-  app.use(auth);
+    
+});
+
+// Authentication Middleware.
+//console.log("session saved outside of login? :", req.session.user);
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
+app.get("/budget",  async (req, res) => {
+  try {
+    // Assuming you have logic to fetch the months based on your application's requirements
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    // Assuming you have logic to fetch user-specific budget data
+    // Replace the sample logic with your actual logic
+    const userSpecificExpenses = await db.any('SELECT * FROM Users_to_Budget WHERE Username = $1', [req.session.user.username]);
+     
+    // Fetch existing budget data for each month
+    // const budgetData = await db.any('SELECT * FROM User_Budget WHERE Username = $1', [req.session.user.username]);
+
+    res.render("pages/budget", {
+      expenses: userSpecificExpenses,
+      action: req.query.taken ? 'delete' : 'add',
+      months: months, // Pass the months variable to the template
+      // budgetData: budgetData,
+    });
+  } catch (error) {
+    console.error('Error fetching user-specific expenses:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
 
+
+// POST API to add an expense
+app.post('/addExpense',  (req, res) => {
+  res.render("pages/home");
+});
+
+app.post('/submitExpenseForm', async (req, res) => {
+  try {
+    const { category, amount, total, label, budgetId } = req.body;
+
+    // Insert the new expense into the Income_Expense table
+    const newExpense = await db.one('INSERT INTO Income_Expense (Category, Amount, Total, Label) VALUES ($1, $2, $3, $4) RETURNING *', [category, amount, total, label]);
+
+    // Associate the new expense with the user's budget in the Budget_to_Income table
+    await db.none('INSERT INTO Budget_to_Income (Budget_ID, Index_ID) VALUES ($1, $2)', [budgetId, newExpense.Index_ID]);
+
+    // Send a success response
+    res.status(200).json({ message: 'Expense added successfully', expense: newExpense });
+  } catch (error) {
+    console.error('Error adding expense:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+// POST API to remove an expense
+app.post('/removeExpense', async (req, res) => {
+  try {
+    const { indexId } = req.body;
+
+    // Delete the expense from the Budget_to_Income table
+    await db.none('DELETE FROM Budget_to_Income WHERE Index_ID = $1', [indexId]);
+
+    // Delete the expense from the Income_Expense table
+    await db.none('DELETE FROM Income_Expense WHERE Index_ID = $1', [indexId]);
+
+    // Send a success response
+    res.status(200).json({ message: 'Expense removed successfully', indexId });
+  } catch (error) {
+    console.error('Error removing expense:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 module.exports = app.listen(3000);
 console.log("Server is listening on port 3000");

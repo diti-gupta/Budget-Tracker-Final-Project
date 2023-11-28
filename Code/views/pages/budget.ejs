@@ -1,0 +1,56 @@
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+        <% if (locals.message) { %>
+            <div class="alert alert-<%- locals.error ? 'danger' : 'success' %>" role="alert">
+                <%= message %>
+            </div>
+        <% } %>
+
+        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+        <body>
+            <header>
+                <h2>EZBudget - Your Budget Overview</h2>
+            </header>
+        
+            <!-- Month Navigation -->
+            <section id="month-navigation">
+                <h2>Choose a Month</h2>
+                <div>
+                    <% months.forEach(month => { %>
+                        <button onclick="goToMonth('<%= month %>')"><%= month %></button>
+                    <% }); %>
+                </div>
+            </section>
+            
+            <!-- Display existing budget data -->
+          
+        
+            <!-- Budget Tab -->
+            <section id="budget">
+                <h2>Budget</h2>
+        
+                <!-- Add Expense Form -->
+                <form action="/addExpense" method="post">
+                    <button type="submit">Add Expense</button>
+                </form>
+                
+                <!-- Remove Expense Form -->
+                <form action="/removeExpense" method="post">
+                    <button type="submit">Remove Expense</button>
+                </form>
+        
+        
+        
+            </section>
+        
+            <footer>
+                <p>&copy; <%= new Date().getFullYear() %> EZBudget</p>
+            </footer>
+        
+           
+</body>
+</main>
+
+<%- include ('../partials/footer') %>
