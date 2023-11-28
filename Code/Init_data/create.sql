@@ -5,6 +5,7 @@ CREATE TABLE Users (
     Username VARCHAR(60) PRIMARY KEY,
     Password VARCHAR(60) NOT NULL
 );
+
 /*User Budget Table*/
 CREATE TABLE User_Budget (
     Budget_id INT PRIMARY KEY,
@@ -22,7 +23,7 @@ CREATE TABLE Users_to_Budget (
 /*Income Expense Table*/
 CREATE TABLE Income_Expense (
     Index_ID INT PRIMARY KEY,
-    Category CategroyEnum,
+    Category CategoryEnum,
     Amount FLOAT NOT NULL,
     Total FLOAT NOT NULL,
     Label VARCHAR(50)

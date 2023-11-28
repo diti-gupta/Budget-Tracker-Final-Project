@@ -69,7 +69,7 @@ it('Positive: /register', (done) => {
   chai
     .request(server)
     .post('/register')
-    .send({ username: 'new_user12345', password: 'passwordabc' })
+    .send({ username: 'newestuser1', password: 'abc' })
     .end((err, res) => {
       expect(res).to.have.status(200); // Expect a redirect status for successful registration
       expect(res.body.message).to.equals('Successful Registration');
