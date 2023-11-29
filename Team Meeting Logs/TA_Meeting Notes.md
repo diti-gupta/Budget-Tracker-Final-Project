@@ -47,5 +47,26 @@ Follow Up items:
     - Create a plan of when to create database/how to create it before end of week 
     
 
+Week 3: 11/29/2023: Meeting #3 with Shipra for Lab 11 (18 minutes long):
 
+Discussed progress on Lab 11 
 
+    - discussed front-end progress 
+
+    - discussed database progress
+
+    - discussed equal contribution 
+
+Decisions made:
+
+    - Need to imporve at delegating tasks specifically  
+    
+    - Meet everyday throught the next week and a half
+
+Follow Up items:
+
+    - Have a working demo for our meeting next week with Shipra
+
+    - Continue updating the UAT
+
+    - Finish database  
