@@ -176,8 +176,7 @@ const express = require("express");
 
  
   app.get("/",(req,res)=>{
-    res.render("pages/register");
- 
+    res.render("pages/home");
   });
 
 
