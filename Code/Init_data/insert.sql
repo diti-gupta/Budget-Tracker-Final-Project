@@ -1,7 +1,7 @@
 INSERT INTO users (password, username) VALUES
     ('$2b$10$AOC7paRUgmHE.lZe1yTlmeVNRA5bTFbMNI35CtTg767QzA1ngVVEW', 'user8');
 
-INSERT INTO User_Budget (Budget_id, Month)
+INSERT INTO User_Budget (Budget_id, Current_month)
 VALUES (1, 12); -- Budget Id is 1, Month is December
 
 
