@@ -33,8 +33,7 @@ it('positive : /login', done => {
       .post('/login')
       .send({username: 'user8', password: 'abcd'})
       .end((err, res) => {
-        //expect(res).to.have.status(200);
-        expect(res).to.redirect;
+        expect(res).to.have.status(200);
         done();
       });
   });
