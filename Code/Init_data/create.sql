@@ -3,7 +3,7 @@ CREATE TYPE CategoryEnum AS ENUM ('Salary', 'Investments', 'Transportation', 'Fo
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE Users (
     Username VARCHAR(60) PRIMARY KEY,
-    Budget_ID NOT NULL INT,
+    Budget_ID INT NOT NULL,
     Password VARCHAR(60) NOT NULL
 );
 
@@ -25,5 +25,5 @@ CREATE TABLE Users_to_Income (
     Monthh INT,
     FOREIGN KEY (Budget_id) REFERENCES Users(Budget_id),
     FOREIGN KEY (Index_ID) REFERENCES Income_Expense(Index_ID),
-    FOREIGN KEY (Monthh) REFERENCES Income_Expense(Monthh),
+    FOREIGN KEY (Monthh) REFERENCES Income_Expense(Monthh)
 );
