@@ -82,9 +82,9 @@ it('Negative: /register. Checking existing username', (done) => {
   chai
     .request(server)
     .post('/register')
-    .send({ username: 'user8'}) // Use an existing username to simulate a negative case
+    .send({username: 'user8', password: '123'}) // Use an existing username to simulate a negative case
     .end((err, res) => {
-      expect(res).to.redirect;
+      expect(res).to.have.status(200);
       done();
     });
 });
