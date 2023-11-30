@@ -9,7 +9,7 @@ CREATE TABLE Users (
 /*User Budget Table*/
 CREATE TABLE User_Budget (
     Budget_id INT PRIMARY KEY,
-    Month INT NOT NULL
+    Current_month INT NOT NULL
 );
 
 /*Users TO Budget Table*/
