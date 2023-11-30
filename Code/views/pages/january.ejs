@@ -1,0 +1,145 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+<%- include ('../partials/footer') %>
+
+
+<main class="container">
+    <% if (locals.message) { %>
+        <div class="alert alert-<%- locals.error ? 'danger' : 'success' %>" role="alert">
+            <%= message %>
+        </div>
+    <% } %>
+
+
+    <header>
+        <h2>EZBudget - Your Budget Overview</h2>
+    </header>
+    <section id="month-navigation">
+        <h2>Choose a Month</h2>
+        <div>
+            <% MONTHS.forEach(month => { %>
+                <button onclick="goToMonth('<%= month %>')"><%= month %></button>
+            <% }); %>
+        </div>
+    </section>
+
+
+    <!-- Add Expense Form -->
+    <form action="/addExpense" method="post">
+        <button type="submit" id="addExpenseButton">Add Expense</button>
+    </form>
+
+
+    <!-- Expense Modal -->
+    <div id="event-modal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add a ride</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="addExpense", method="post">
+                    <div class="mb-3" id="title">
+                        <label for="title" class="form-label">Expense Name</label>
+                        <input type="text" name="title" class="form-control"  required>
+                    </div>
+                
+                    <button id="submit_button" class="btn btn-primary" type="submit">
+                        Create Expense
+                    </button>
+                  </form>
+
+
+    <!-- <footer>
+        <p>&copy; <%= new Date().getFullYear() %> EZBudget</p>
+    </footer> -->
+
+
+
+
+
+
+<!-- Adding Bootstrap JavaScript at the end of the document -->
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+crossorigin="anonymous"
+></script>
+
+
+<script>
+    const MONTHS = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const MONTHLY_EXPENSES = [
+          {
+            Index_id: 1,
+            Category: 'Salary',
+            Amount: '1000.00',
+            Total: '1000.00',
+            Label: 'Monthly Salary',
+          }
+        ];
+      
+  let EVENT_MODAL;
+
+  const initializeContent = async()=>
+    {
+        EVENT_MODAL= new bootstrap.Modal(document.getElementById('expenseModal'));
+        updateDOM();
+    }
+    
+    function updateDOM() 
+    {
+        const events = MONTHLY_EXPENSES;
+    }
+
+    function openEventModal() 
+    {
+         console.log('Open event called');
+        EVENT_MODAL.show();
+    }
+    function goToMonth(month) {
+        // Logic to navigate to the selected month
+        console.log('Navigating to ' + month);
+        // You can add additional logic to navigate to the month page
+        // For example, redirecting to a specific URL
+        window.location.href = '/month/' + month;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('expenseModal'));
+        var addExpenseBtn = document.getElementById('addExpenseButton');
+
+
+        if (addExpenseBtn) {
+            addExpenseBtn.addEventListener('click', function () {
+                myModal.show();
+            });
+        } else {
+            console.error('Button with ID "addExpenseButton" not found.');
+        }
+    });
+</script>
+
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Assuming you have Bootstrap included in your project
+        var myModal = new bootstrap.Modal(document.getElementById('expenseModal'));
+        myModal.show();
+      });
+</script>
+</main>

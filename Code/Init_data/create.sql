@@ -21,8 +21,9 @@ CREATE TABLE Users_to_Budget (
 );
 
 /*Income Expense Table*/
+
 CREATE TABLE Income_Expense (
-    Index_ID INT PRIMARY KEY,
+    Index_ID SERIAL PRIMARY KEY,
     Category CategoryEnum,
     Amount FLOAT NOT NULL,
     Total FLOAT NOT NULL,

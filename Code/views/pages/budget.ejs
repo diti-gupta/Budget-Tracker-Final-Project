@@ -1,94 +1,11 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
 
-
-<main class="container">
-    <% if (locals.message) { %>
-        <div class="alert alert-<%- locals.error ? 'danger' : 'success' %>" role="alert">
-            <%= message %>
-        </div>
-    <% } %>
-
-
-    <header>
-        <h2>EZBudget - Your Budget Overview</h2>
-    </header>
-    <section id="month-navigation">
-        <h2>Choose a Month</h2>
-        <div>
-            <% months.forEach(month => { %>
-                <button onclick="goToMonth('<%= month %>')"><%= month %></button>
-            <% }); %>
-        </div>
-    </section>
-
-
-    <!-- Add Expense Form -->
-    <form action="/addExpense" method="post">
-        <button type="submit" id="addExpenseButton">Add Expense</button>
-    </form>
-
-
-    <!-- Expense Modal -->
-    <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <!-- Add your modal content here -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="expenseModalLabel">Add Expense</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Add your expense input fields here -->
-                    <form action="/addExpense" method="post">
-                        <!-- Add your input fields here -->
-                        <button type="submit">Save Expense</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <footer>
-        <p>&copy; <%= new Date().getFullYear() %> EZBudget</p>
-    </footer>
-</main>
-
+<div class="col"><%- include ('../partials/message') %></div>
+<main>
+    <div class="container">
+      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+      <h1>Budget</h1>
+      <%- include ('../partials/budgetNav') %>
+  </main>
 
 <%- include ('../partials/footer') %>
-
-
-<!-- Adding Bootstrap JavaScript at the end of the document -->
-<script
-src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-crossorigin="anonymous"
-></script>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var myModal = new bootstrap.Modal(document.getElementById('expenseModal'));
-        var addExpenseBtn = document.getElementById('addExpenseButton');
-
-
-        if (addExpenseBtn) {
-            addExpenseBtn.addEventListener('click', function () {
-                myModal.show();
-            });
-        } else {
-            console.error('Button with ID "addExpenseButton" not found.');
-        }
-    });
-</script>
-
-<script>
-      document.addEventListener("DOMContentLoaded", function() {
-        // Assuming you have Bootstrap included in your project
-        var myModal = new bootstrap.Modal(document.getElementById('expenseModal'));
-        myModal.show();
-      });
-</script>
