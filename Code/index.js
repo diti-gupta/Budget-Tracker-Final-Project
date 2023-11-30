@@ -209,97 +209,71 @@ const express = require("express");
     res.render('pages/register'); // Render the register.ejs page
   });
  
-  //POST REGISTER API
-  app.post('/register', async (req, res) => {
-    try {
-      const { username, password } = req.body;
- 
-      // Check if the username already exists in the database
-      const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [username]);
-      if (existingUser) {
-        console.log("in existeing user", existingUser);
-        // If the username exists, redirect to login with a message
-        throw new Error("Account already exists");
-      }
- 
-      // Hash the password using bcrypt
-      const hashedPassword = await bcrypt.hash(password, 10);
- 
-      // Insert the username and hashed password into the users table
-      const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
-      console.log("inserting", query);
-      const values = [username, hashedPassword];
-      console.log("values", values);
-      await db.none(query, values);
- 
-      // Redirect to the login page after successful registration
-      // res.redirect('/login');
-      res.status(200).json({message:'Successful Registration'});
-    }
-    catch (error)
-    {
-      console.log("in catch error: account exists");
-      // Log the error for debugging purposes
-        res.status(200).json({message: 'Account already exists' });
- 
-      // Redirect to the registration page with an error message
-      // res.redirect('/register');
-    }
+   //POST register 
+   app.post('/register', async (req, res) => {
+    //hash the password using bcrypt library
+    const hash = await bcrypt.hash(req.body.password, 10);
+  
+    // To-DO: Insert username and hashed password into the 'users' table
+  
+    let query = `INSERT INTO users(username, password) VALUES ('${req.body.username}','${hash}')`;
+    db.any(query)
+    .then(_ => {
+      console.log('data added');
+      res.redirect('/login');
+    })
+    .catch(err => {
+      console.log('error');
+        res.render('pages/register',{
+          error:true,
+          message:"User already exists"
+        });
+    });
   });
 
-
-  //LOGIN POST API
   app.post('/login', async (req,res)=>{
-    try {
-      const { username, password } = req.body;
+    let query = `SELECT * FROM users WHERE users.username = '${req.body.username}'`;
+    await db.one(query, req.body.username) 
+    .then((data)=>{
+        user.username = data.username;
+        user.password = data.password;
+    })
 
-
-      // console.log("In app.post login");
-      // console.log(username, password);
-
-
-      // Find the user from the users table
-      const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
-      // console.log(user);
-      if (!user) {
-        // If the user is not found, redirect to the registration page
-        // console.log("In ! user");
-        return res.redirect('/register');
-      }
- 
-      // Use bcrypt.compare to check if the entered password matches the hashed password in the database
-      // console.log("user.password length:", user.password);
-      // console.log("actual password length", password);
-      const hashedPassword = await bcrypt.hash(password, 10);
-      // console.log("hashedPassword: ", hashedPassword);
-      const passwordMatch = await bcrypt.compare(password, user.password);
-
-
-      // console.log("DOES password MATCH?", passwordMatch);
-      if (!passwordMatch) {
-        // If the password is incorrect, throw an error and redirect to login
-        // console.log("passwords don't match!")
-        throw new Error('Invalid input');
-      }
- 
-      // Save the user in the session
-      req.session.user = user;
-      console.log("in login saving user  :", req.session.user);
-      // console.log("username & password validated!!");
-      req.session.save(() => {
-        // Redirect to the /register for now TBD route after setting the session
-        res.status(200).json({message:'Success'});
-      });
-    } catch (error) {
-      // If the database request fails or if there is an incorrect password, handle the error
-      res.status(200).json({message:'Invalid input'}); // Render the login page with an error message
+    .catch((err) => {
+      //if user isnt in database
+        if(user.password == undefined){
+          res.render('pages/register',{
+            error:true,
+            message: "User not registered"
+          });
+          return;
+        }
+        else{
+        res.render('pages/login',{
+          //if cannot populate db
+            error:true,
+            message: "Unable to populate database"
+        });}
+    });
+    
+    if(user.password != undefined){
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if(match == true){
+          //if match for login
+        req.session.user = user;
+        req.session.save();
+        res.redirect('/budget');
+        }
+        else{
+          //if not match for login
+        res.render('pages/login',{
+          error:true,
+          message: "Incorrect password"
+        });
+        };
     }
-   
 });
 
-
-// Authentication Middleware.
-//console.log("session saved outside of login? :", req.session.user);
 const auth = (req, res, next) => {
   if (!req.session.user) {
     // Default to login page.
@@ -308,13 +282,22 @@ const auth = (req, res, next) => {
   next();
 };
 
-
 // Authentication Required
 app.use(auth);
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  
+  res.render('pages/login',{
+    error:false,
+    message: "Logged out successfully!"
+  });
+});
 
-// app.get("/budget",  async (req, res) => {
-//   try {
+
+module.exports = app.listen(3000);
+console.log("Server is listening on port 3000");
+
 //     // Assuming you have logic to fetch the months based on your application's requirements
 //     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 //     // Assuming you have logic to fetch user-specific budget data
@@ -377,5 +360,3 @@ app.use(auth);
 //     res.status(500).json({ message: 'Internal Server Error' });
 //   }
 // });
-module.exports = app.listen(3000);
-console.log("Server is listening on port 3000");
