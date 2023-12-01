@@ -3,12 +3,10 @@ CREATE TYPE CategoryEnum AS ENUM ('Salary', 'Investments', 'Transportation', 'Fo
 DROP TABLE IF EXISTS Users CASCADE;
 CREATE TABLE Users (
     Username VARCHAR(60) PRIMARY KEY,
-    --Budget_ID SERIAL NOT NULL, -- Assuming this is a foreign key in the Users_to_Income table
-    Password VARCHAR(60) NOT NULL
-    --UNIQUE (Budget_ID)
+    Password VARCHAR(60) NOT NULL   
 );
-/*Income Expense Table*/
 
+/*Income Expense Table*/
 CREATE TABLE Income_Expense (
     Index_ID SERIAL PRIMARY KEY,
     Category CategoryEnum,
