@@ -60,13 +60,11 @@ const express = require("express");
   });
 
   app.get('/jan',async (req,res)=>{
-    const clickedMonth = req.query.clickedMonth || 'jan'; // Default to January if not provided
-    console.log("month",clickedMonth);
     try {
-        const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 1');
+        const expenses = await db.query('SELECT * FROM Income_Expense');
         console.log("expenses", expenses);
 
-        res.render(`pages/months/${clickedMonth}`, { expenses });
+        res.render('pages/months/jan', { expenses });
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -141,20 +139,14 @@ const express = require("express");
       try {
           // Extract expense details from the request body
           const { category, amount, total,label } = req.body;
-          const clickedMonth = req.originalUrl.split('/');
-          console.log("full request: ", req.originalUrl);
-          //const clickedMonth=req.query.clickedMonth; //extract the clicked month from the query string TBD?
-          console.log("clicked month in add expense", clickedMonth);
+         
   
           // Validate input if needed
   
           // Perform the database insertion (assumes you have a db object connected to your database)
-          const username = req.session.user.username;
-          console.log("session saved, usename in add expense", username);
-          const result = await db.query(
-            'INSERT INTO Income_Expense (Category, Amount, Total, Label, Monthh) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [category, amount, total, label, clickedMonth]
-        );
+          const result = await db.query('INSERT INTO Income_Expense (Category, Amount,Total,Label) VALUES ($1, $2, $3, $4) RETURNING *',
+              [category, amount, total, label]);
+      
              // console.log("result.rows[0].Index_ID", result.rows[0].Index_ID);
 
               //print the index id of the inserted value: 
