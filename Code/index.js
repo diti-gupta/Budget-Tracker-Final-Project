@@ -60,12 +60,13 @@ const express = require("express");
   });
 
   app.get('/jan',async (req,res)=>{
-   
+    const clickedMonth = req.query.clickedMonth || 'jan'; // Default to January if not provided
+    console.log("month",clickedMonth);
     try {
-        const expenses = await db.query('SELECT * FROM Income_Expense');
+        const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 1');
         console.log("expenses", expenses);
 
-        res.render('pages/months/jan', { expenses });
+        res.render(`pages/months/${clickedMonth}`, { expenses });
       } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -93,17 +94,67 @@ const express = require("express");
 
     //now outside of january 
     //ADD Expense call for button in each month page
+    app.post('/login', async (req,res)=>{
+      let query = `SELECT * FROM users WHERE users.username = '${req.body.username}'`;
+      await db.one(query, req.body.username) 
+      .then((data)=>{
+          user.username = data.username;
+          user.password = data.password;
+      })
+  
+      .catch((err) => {
+        //if user isnt in database
+          if(user.password == undefined){
+            res.render('pages/register',{
+              error:true,
+              message: "User not registered"
+            });
+            return;
+          }
+          else{
+          res.render('pages/login',{
+            //if cannot populate db
+              error:true,
+              message: "Unable to populate database"
+          });}
+      });
+      
+      if(user.password != undefined){
+          const match = await bcrypt.compare(req.body.password, user.password);
+          if(match == true){
+            //if match for login
+          req.session.user = user;
+          req.session.save();
+          res.redirect('/budget');
+          }
+          else{
+            //if not match for login
+          res.render('pages/login',{
+            error:true,
+            message: "Incorrect password"
+          });
+          };
+      }
+  });
+  
     app.post('/addExpense', async (req, res) => {
       try {
           // Extract expense details from the request body
           const { category, amount, total,label } = req.body;
+          const clickedMonth = req.originalUrl.split('/');
+          console.log("full request: ", req.originalUrl);
+          //const clickedMonth=req.query.clickedMonth; //extract the clicked month from the query string TBD?
+          console.log("clicked month in add expense", clickedMonth);
   
           // Validate input if needed
   
           // Perform the database insertion (assumes you have a db object connected to your database)
-          
-          const result = await db.query('INSERT INTO Income_Expense (Category, Amount,Total,Label) VALUES ($1, $2, $3, $4) RETURNING *',
-              [category, amount, total, label]);
+          const username = req.session.user.username;
+          console.log("session saved, usename in add expense", username);
+          const result = await db.query(
+            'INSERT INTO Income_Expense (Category, Amount, Total, Label, Monthh) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [category, amount, total, label, clickedMonth]
+        );
              // console.log("result.rows[0].Index_ID", result.rows[0].Index_ID);
 
               //print the index id of the inserted value: 
@@ -229,48 +280,7 @@ const express = require("express");
     });
   });
 
-  app.post('/login', async (req,res)=>{
-    let query = `SELECT * FROM users WHERE users.username = '${req.body.username}'`;
-    await db.one(query, req.body.username) 
-    .then((data)=>{
-        user.username = data.username;
-        user.password = data.password;
-    })
-
-    .catch((err) => {
-      //if user isnt in database
-        if(user.password == undefined){
-          res.render('pages/register',{
-            error:true,
-            message: "User not registered"
-          });
-          return;
-        }
-        else{
-        res.render('pages/login',{
-          //if cannot populate db
-            error:true,
-            message: "Unable to populate database"
-        });}
-    });
-    
-    if(user.password != undefined){
-        const match = await bcrypt.compare(req.body.password, user.password);
-        if(match == true){
-          //if match for login
-        req.session.user = user;
-        req.session.save();
-        res.redirect('/budget');
-        }
-        else{
-          //if not match for login
-        res.render('pages/login',{
-          error:true,
-          message: "Incorrect password"
-        });
-        };
-    }
-});
+ 
 
 const auth = (req, res, next) => {
   if (!req.session.user) {

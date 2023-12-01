@@ -4,5 +4,17 @@ INSERT INTO users (password, username) VALUES
 INSERT INTO Income_Expense (Index_ID, Category, Amount, Total, Monthh, Label)
 VALUES (1, 'Salary', 5000.00, 5000.00, 2, 'Monthly Salary');
 
-INSERT INTO Users_to_Income (Budget_ID, Index_ID, Monthh)
-VALUES (1, 1, 1);
+-- INSERT INTO Users_to_Income (Username, Index_ID, Monthh)
+-- SELECT Username FROM Users
+
+INSERT INTO Users_to_Income (Username, Index_ID, Monthh)
+SELECT
+    U.Username,
+    IE.Index_ID,
+    IE.Monthh
+FROM
+    Users U
+JOIN
+    Income_Expense IE ON 1 = 1
+WHERE
+    IE.Monthh IN (SELECT DISTINCT Monthh FROM Income_Expense);

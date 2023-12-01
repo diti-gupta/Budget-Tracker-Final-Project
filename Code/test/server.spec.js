@@ -70,8 +70,6 @@ In the rerun, the newuser exists in the database, thus the username has to be a 
 //     .send({ username: 'newestuser1', password: 'abc' })
 //     .end((err, res) => {
 //       expect(res).to.have.status(200); // Expect a redirect status for successful registration
-//       expect(res.body.message).to.equals('Successful Registration');
-      
 //       done();
 //     });
 // });
