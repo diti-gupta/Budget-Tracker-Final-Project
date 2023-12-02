@@ -141,14 +141,13 @@ const express = require("express");
       }
   });
   
-    app.post('/addExpense', async (req, res) => {
+    app.post('/addExpenseJan', async (req, res) => {
       try {
           // Extract expense details from the request body
-          const { category, amount, total,label } = req.body;
-          const clickedMonth = req.originalUrl.split('/');
+          const { category, amount, label } = req.body;
           console.log("full request: ", req.originalUrl);
           //const clickedMonth=req.query.clickedMonth; //extract the clicked month from the query string TBD?
-          console.log("clicked month in add expense", clickedMonth);
+          
   
           // Validate input if needed
   
@@ -156,8 +155,7 @@ const express = require("express");
           const username = req.session.user.username;
           console.log("session saved, usename in add expense", username);
           const result = await db.query(
-            'INSERT INTO Income_Expense (Category, Amount, Total, Label, Monthh) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [category, amount, total, label, clickedMonth]
+            `INSERT INTO Income_Expense (Category, Amount, Label, Monthh) VALUES ('${req.body.category}', '${req.body.amount}','${req.body.label}',1) RETURNING *`
         );
       
              // console.log("result.rows[0].Index_ID", result.rows[0].Index_ID);

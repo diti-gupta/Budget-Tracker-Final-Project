@@ -11,7 +11,6 @@ CREATE TABLE Income_Expense (
     Index_ID SERIAL PRIMARY KEY,
     Category CategoryEnum,
     Amount FLOAT NOT NULL,
-    Total FLOAT NOT NULL,
     Monthh INT,
     Label VARCHAR(50),
     UNIQUE (Monthh)
