@@ -47,7 +47,9 @@ const express = require("express");
       extended: true,
     })
   );
-
+  
+  // all need to add into main repo for index.js ->
+  app.use(express.static(__dirname + '/views'));
 
   const user = {
     username: undefined,
