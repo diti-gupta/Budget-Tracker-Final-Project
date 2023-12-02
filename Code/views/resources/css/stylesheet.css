@@ -3,7 +3,7 @@
 #logo-img{
     position: absolute;
     top: 40%;
-    left: 10%;
+    left: 9%;
     display: block;
     width:  40%;
     height: 20%;
@@ -21,7 +21,7 @@
     font-family: "Tahoma", sans-serif;
     position:absolute;
     top: 40%;
-    left: 55%;
+    left: 53%;
     color:white;
     text-shadow: 2px 2px 2px gray;
     max-width: 100%;
@@ -34,7 +34,7 @@
     border:none;
     position:absolute;
     top: 50%;
-    left: 55%;
+    left: 53%;
     width:500px;
     height: 60px;
     font-size:30px;
