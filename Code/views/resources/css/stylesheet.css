@@ -2,11 +2,13 @@
 
 #logo-img{
     position: absolute;
-    top: 300px;
-    left: 70px;
+    top: 40%;
+    left: 9%;
     display: block;
-    width: 900px;
-    height: 250px;
+    width:  40%;
+    height: 20%;
+    max-width: 100%;
+    height:auto;
 }
 
 #logo-img-login{
@@ -18,10 +20,28 @@
 #title{
     font-family: "Tahoma", sans-serif;
     position:absolute;
-    top: 300px;
-    left: 1100px;
+    top: 40%;
+    left: 53%;
     color:white;
     text-shadow: 2px 2px 2px gray;
+    max-width: 100%;
+    height:auto;
+}
+
+.btn-primary{
+    background-color: #9CCC65;
+    color:white;
+    border:none;
+    position:absolute;
+    top: 50%;
+    left: 53%;
+    width:500px;
+    height: 60px;
+    font-size:30px;
+    font-family: "Tahoma", sans-serif;
+    text-shadow: 2px 2px 2px gray;
+    max-width: 100%;
+    height:auto;
 }
 
 #user-title{
@@ -66,20 +86,6 @@ input{
     border-style: groove;
     padding:10px;
     width: 400px;
-}
-
-.btn-primary{
-    background-color: #9CCC65;
-    color:white;
-    border:none;
-    position:absolute;
-    top: 400px;
-    left: 1100px;
-    width:500px;
-    height: 60px;
-    font-size:30px;
-    font-family: "Tahoma", sans-serif;
-    text-shadow: 2px 2px 2px gray;
 }
 
 ul,li{
