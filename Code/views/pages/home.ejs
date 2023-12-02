@@ -1,15 +1,19 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
 <%- include ('../partials/message') %>
-<main>
-    <div class="container">
-      <h1><centre>Welcome to EZBudget!</centre></h1>
-        <form action="/login" method="GET">
-            <button id="submit_button" class="btn btn-primary" type="submit">
-                Login
-              </button>
-          </form>
-    </div>
-  </main>
+
+    <main>
+      <link href="/resources/css/homePage.css" rel="stylesheet" type="text/css">
+      <div class="container">
+        <img id="logo-img" src="../resources/images/EZBudget_Logo.png" alt= "Logo">
+        <h1><centre id="title">Managing money made simple</centre></h1>
+          <form action="/login" method="GET">
+              <button id="submit_button" class="btn btn-primary" type="submit">
+                  Log-in Now!
+                </button>
+            </form>
+      </div>
+    </main>
+
 
   <%- include ('../partials/footer') %>
