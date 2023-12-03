@@ -240,24 +240,24 @@ const express = require("express");
 
 
 
-//DELETE Expense
-app.post('/deleteExpense/feb', async (req, res) => {
-  try {
-      const expenseId = req.body.expenseId;
-      console.log("expense Id", expenseId);
+// //DELETE Expense
+// app.post('/deleteExpense/feb', async (req, res) => {
+//   try {
+//       const expenseId = req.body.expenseId;
+//       console.log("expense Id", expenseId);
 
-      // Perform the deletion operation in the database
-      const deleteQuery = 'DELETE FROM Income_Expense WHERE Index_ID = $1';
-      await db.query(deleteQuery, [expenseId]);
+//       // Perform the deletion operation in the database
+//       const deleteQuery = 'DELETE FROM Income_Expense WHERE Index_ID = $1';
+//       await db.query(deleteQuery, [expenseId]);
 
-      // Redirect back to the January page or any other page you prefer
-      res.redirect('/feb');
-  } catch (error) {
-      console.error('Error deleting expense:', error);
-      // Handle the error appropriately, e.g., send an error response
-      res.status(500).send('Internal Server Error');
-  }
-});
+//       // Redirect back to the January page or any other page you prefer
+//       res.redirect('/feb');
+//   } catch (error) {
+//       console.error('Error deleting expense:', error);
+//       // Handle the error appropriately, e.g., send an error response
+//       res.status(500).send('Internal Server Error');
+//   }
+// });
 
 
   app.get('/expenses', async (req, res) => {
@@ -272,16 +272,24 @@ app.post('/deleteExpense/feb', async (req, res) => {
   });
 
 
-  app.get('/getChartData/jan', async (req, res) => {
+  app.get('/getChartData/:month', async (req, res) => {
     try {
+      console.log("in get chart Data");
       const username = req.session.user.username;
-      //const clickedMonth = req.originalUrl.split('/');
-      // console.log("req origingal ", req.originalUrl);
-      // console.log("clicked month in data chart", clickedMonth);
+
+      const month=req.params.month;
+      console.log("month", month);
+
+      const monthToNumber = {
+        jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
+        jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+      };
+      const monthNumber = monthToNumber[month];
+      console.log("month number", monthNumber);
 
       console.log("username in chart", username);
       // Fetch data from the database
-      const result = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 AND Monthh = 1 GROUP BY Category',[username]);
+      const result = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 AND Monthh = $2 GROUP BY Category',[username,monthNumber]);
       console.log("get chart data RESULT:", result);
      
       // Format the data for the chart
@@ -295,40 +303,40 @@ app.post('/deleteExpense/feb', async (req, res) => {
     }
   });
 
-  app.get('/getChartData/feb', async (req, res) => {
-    try {
-      const username = req.session.user.username;
-      //const clickedMonth = req.originalUrl.split('/');
-      // console.log("req origingal ", req.originalUrl);
-      // console.log("clicked month in data chart", clickedMonth);
+  // app.get('/getChartData/feb', async (req, res) => {
+  //   try {
+  //     const username = req.session.user.username;
+  //     //const clickedMonth = req.originalUrl.split('/');
+  //     // console.log("req origingal ", req.originalUrl);
+  //     // console.log("clicked month in data chart", clickedMonth);
 
-      console.log("username in chart", username);
-      // Fetch data from the database
-      const result = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 AND Monthh = 2 GROUP BY Category',[username]);
-      console.log("get chart data RESULT:", result);
+  //     console.log("username in chart", username);
+  //     // Fetch data from the database
+  //     const result = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 AND Monthh = 2 GROUP BY Category',[username]);
+  //     console.log("get chart data RESULT:", result);
      
-      // Format the data for the chart
-      const dataPoints = result.map(row => ({ y: row.total, label: row.category }));
-      console.log("datapoint in get api", dataPoints);
+  //     // Format the data for the chart
+  //     const dataPoints = result.map(row => ({ y: row.total, label: row.category }));
+  //     console.log("datapoint in get api", dataPoints);
  
-      res.json(dataPoints);
-    } catch (error) {
-      console.error('Error fetching data for chart:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  //     res.json(dataPoints);
+  //   } catch (error) {
+  //     console.error('Error fetching data for chart:', error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // });
 
 
-  app.get('/expensesbycategory', async (req, res) => {
-    try {
-      //  get expenses from the table using a query
-      const expensesbycategory = await db.query('SELECT DISTINCT Category FROM Income_Expense');
-      res.json(expensesbycategory.rows);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  // app.get('/expensesbycategory', async (req, res) => {
+  //   try {
+  //     //  get expenses from the table using a query
+  //     const expensesbycategory = await db.query('SELECT DISTINCT Category FROM Income_Expense');
+  //     res.json(expensesbycategory.rows);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // });
  
   app.get("/",(req,res)=>{
     res.render("pages/home");

@@ -111,7 +111,10 @@ crossorigin="anonymous">
 <script>
 window.onload = function () {
 
-  fetch('/getChartData/feb')
+  var month = '<%month%>';
+  console.log("month in function", month);
+
+  fetch(`/getChartData/${month}`)
     .then(response => response.json())
     .then(dataPoints => {
 
