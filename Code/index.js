@@ -140,6 +140,28 @@ app.get('/expenses', async (req, res) => {
     }
   });
 
+  app.get('/getChartDataYear', async (req, res) => {
+    try {
+      console.log("in get chart Data");
+      const username = req.session.user.username;
+
+
+      console.log("username in chart", username);
+      // Fetch data from the database
+      const result = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 GROUP BY Category', [username]);
+      console.log("get chart data RESULT:", result);
+     
+      // Format the data for the chart
+      const dataPoints = result.map(row => ({ y: row.total, label: row.category }));
+      console.log("datapoint in get api", dataPoints);
+ 
+      res.json(dataPoints);
+    } catch (error) {
+      console.error('Error fetching data for chart:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
   //GET each Month.ejs:
 
   // ------------------------------------------------------January (abbreviated jan)-----------------------------------------------------------
