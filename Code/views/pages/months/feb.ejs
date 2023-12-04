@@ -90,7 +90,7 @@ crossorigin="anonymous">
               <!-- Add a form for each expense with a delete button -->
               <td>
                 <!-- Move the form here so that it is within the same table row -->
-                <form method="post" action="/deleteExpense/feb">
+                <form method="post" action="/deleteExpense/<%= month %>">
                     <input type="hidden" name="expenseId" value="<%= expense.index_id %>">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
@@ -109,8 +109,8 @@ crossorigin="anonymous">
       <!--Function for Pie Chart -->
     
 <script>
-window.onload = function () {
-
+window.onload = function() {
+  console.log("in finction for onlaod feb");
   var month = '<%= month %>';
   console.log("month in function", month);
 
