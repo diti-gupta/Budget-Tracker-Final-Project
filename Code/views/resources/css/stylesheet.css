@@ -199,6 +199,7 @@ ul,li{
     height:auto;
 }
 
-#l{
-    width: 100000px;
+#chartContainer {
+    margin-top: 100px;
+    margin-bottom: 20px;
 }

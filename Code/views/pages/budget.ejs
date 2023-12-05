@@ -26,8 +26,12 @@ crossorigin="anonymous">
 
       if (dataPoints.length > 0) {
       var chart = new CanvasJS.Chart("chartContainer", {
+      backgroundColor: "#D2D2D2",
       animationEnabled: true,
       title:{
+        fontFamily: "Tahoma",
+        fontStyle: "bold",
+        fontColor: "#616161",
         text: "Summary of Year",
         horizontalAlign: "left"
       },
@@ -39,7 +43,7 @@ crossorigin="anonymous">
         indexLabel: "{label} - #percent%",
         toolTipContent: "<b>{label}:</b> {y} (#percent%)",
         dataPoints: dataPoints
-      }]
+      }],
     });
     chart.render();
   }

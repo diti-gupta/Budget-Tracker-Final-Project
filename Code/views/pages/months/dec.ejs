@@ -72,7 +72,7 @@ crossorigin="anonymous">
         <table class="table" id="budget-table">
           <thead>
             <tr>
-              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Expense_ID</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Expense ID</th>
               <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Category</th>
               <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Amount</th>
               <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Label</th>
@@ -82,13 +82,20 @@ crossorigin="anonymous">
           <tbody>
             <% let count = 1; %>
             <% expenses.forEach(expense => { %>
-              <tr>
+              <%if (expense.category == 'Transportation' || expense.category == 'Food' || expense.category == 'Entertainment' || expense.category == 'Other'){%>
+              <tr style="background-color: rgb(200, 130, 130);">
                 <td><%= count %></td>
-                <td><%= expense.category %></td>
+                <td ><%= expense.category %></td>
                 <td><%= expense.amount %></td>
                 <td><%= expense.label %></td>
-              
+              <%}else if (expense.category == 'Salary' || expense.category == 'Investments'){%>
+                <tr style="background-color: rgb(133, 180, 133);">
+                  <td><%= count %></td>
+                  <td ><%= expense.category %></td>
+                  <td><%= expense.amount %></td>
+                  <td><%= expense.label %></td>
               <!-- Add a form for each expense with a delete button -->
+              <%}%>
               <td>
                 <!-- Move the form here so that it is within the same table row -->
                 <form method="post" action="/deleteExpense/<%= month %>">
@@ -121,9 +128,12 @@ window.onload = function() {
 
     if (dataPoints.length > 0) {
     var chart = new CanvasJS.Chart("chartContainer", {
-    animationEnabled: true,
-    title:{
-    
+      backgroundColor: "#D2D2D2",
+      animationEnabled: true,
+      title:{
+        fontFamily: "Tahoma",
+        fontStyle: "bold",
+        fontColor: "#616161",
       text: "Summary for December",
       horizontalAlign: "left"
     },
