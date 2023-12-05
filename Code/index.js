@@ -7,6 +7,8 @@ const express = require("express");
   const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
 
 
+
+
   // db config
   const dbConfig = {
     host: "db",
@@ -47,9 +49,10 @@ const express = require("express");
       extended: true,
     })
   );
-  
+ 
   // all need to add into main repo for index.js ->
   app.use(express.static(__dirname + '/views'));
+
 
   const user = {
     username: undefined,
@@ -57,55 +60,335 @@ const express = require("express");
   };
 
 
-  app.get('/budget',(req,res)=>{
-    res.render('pages/budget');
+
+//GET pages API
+app.get("/",(req,res)=>{
+  res.render("pages/home");
+});
+
+app.get("/home", (req, res) => {
+  res.render("pages/home");
+});
+
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
+
+//LOGIN GET API
+app.get('/login', (req,res)=>
+{
+  res.render('pages/login'); //render the login.ejs page
+});
+
+// REGISTER GET API
+app.get('/register', (req, res) => {
+  res.render('pages/register'); // Render the register.ejs page
+});
+
+//BUDGET GET API
+app.get('/budget',(req,res)=>{
+  res.render('pages/budget');
+});
+
+//LOGOUT GET API
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render("pages/logout");
+});
+
+//GET expenses from Income_Expense table API
+app.get('/expenses', async (req, res) => {
+  try {
+      //  get expenses from the table using a query
+      const expenses = await db.query('SELECT * FROM Income_Expense');
+      res.json(expenses.rows);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 
-  app.get('/jan',async (req,res)=>{
-
-    const clickedMonth = req.query.clickedMonth || 'jan'; // Default to January if not provided
-    console.log("month",clickedMonth);
-    
+  //GET chart data for the pie chart  API
+  app.get('/getChartData/:month', async (req, res) => {
     try {
-        const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 1');
-        console.log("expenses", expenses);
+      console.log("in get chart Data");
+      const username = req.session.user.username;
 
-        res.render(`pages/months/${clickedMonth}`, { expenses });
-      } catch (error) {
+      const month=req.params.month;
+      console.log("month", month);
+
+      const monthToNumber = {
+        jan: 1, feb: 2, march: 3, april: 4, may: 5, june: 6,
+        july: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+      };
+      const monthNumber = monthToNumber[month];
+      console.log("month number", monthNumber);
+
+      console.log("username in chart", username);
+      // Fetch data from the database
+      const result = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 AND Monthh = $2 GROUP BY Category',[username,monthNumber]);
+      console.log("get chart data RESULT:", result);
+     
+      // Format the data for the chart
+      const dataPoints = result.map(row => ({ y: row.total, label: row.category }));
+      console.log("datapoint in get api", dataPoints);
+ 
+      res.json(dataPoints);
+    } catch (error) {
+      console.error('Error fetching data for chart:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  app.get('/getChartDataYear', async (req, res) => {
+    try {
+      console.log("in get chart Data");
+      const username = req.session.user.username;
+
+
+      console.log("username in chart", username);
+      // Fetch data from the database
+      const result = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 GROUP BY Category', [username]);
+      console.log("get chart data RESULT:", result);
+     
+      // Format the data for the chart
+      const dataPoints = result.map(row => ({ y: row.total, label: row.category }));
+      console.log("datapoint in get api", dataPoints);
+ 
+      res.json(dataPoints);
+    } catch (error) {
+      console.error('Error fetching data for chart:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  //GET each Month.ejs:
+
+  // ------------------------------------------------------January (abbreviated jan)-----------------------------------------------------------
+  app.get('/jan',async (req,res)=>{
+    try {
+      const username = req.session.user.username; // Get the logged-in username
+      const month = "jan";
+      console.log("username logged in RIGHT NOW: ", username);
+      const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 1 AND Username = $1', [username]);
+      
+      console.log("expenses", expenses);
+
+      res.render('pages/months/jan', {expenses,month});
+      } 
+      catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
       }
-      //res.render('pages/months/jan');
     });
-  //   app.get('/:month', (req, res) => {
-  //     const currentMonth = req.params.month;
-  //     // Rest of your code
-  //  });
-
+   // --------------------------------------------------February (abbreviated feb)-----------------------------------------------------------
     app.get('/feb',async (req,res)=>{
    
       try {
-          const expenses = await db.query('SELECT * FROM Income_Expense');
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "feb";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 2 AND Username = $1', [username]);
           console.log("expenses", expenses);
-  
-          res.render('pages/months/feb', { expenses });
+ 
+          res.render('pages/months/feb', { expenses,month });
         } catch (error) {
           console.error(error);
           res.status(500).send('Internal Server Error');
         }
-        //res.render('pages/months/jan');
+       
       });
 
-    //now outside of january 
-    //ADD Expense call for button in each month page
+      // ------------------------------------------------------March (abbreviated march)-----------------------------------------------------------
+    app.get('/march',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "march";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 3 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/march', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+       
+      });
+
+      // ------------------------------------------------------April (abbreviated april)-----------------------------------------------------------
+    app.get('/april',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "april";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 4 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/april', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+       
+      });
+
+     // ------------------------------------------------------May (abbreviated may)-----------------------------------------------------------
+    app.get('/may',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "may";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 5 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/may', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+       
+      });
+
+// ------------------------------------------------------June (abbreviated june)-----------------------------------------------------------
+    app.get('/june',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "june";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 6 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/june', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+       
+      });
+
+      // ------------------------------------------------------July (abbreviated july)-----------------------------------------------------------
+    app.get('/july',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "july";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 7 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/july', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+       
+      });
+
+      // ------------------------------------------------------August (abbreviated aug)-----------------------------------------------------------
+    app.get('/aug',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "aug";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 8 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/aug', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+       
+      });
+
+      // ------------------------------------------------------September (abbreviated sep)-----------------------------------------------------------
+    app.get('/sep',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "sep";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 9 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/sep', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+      });
+
+     // ------------------------------------------------------October (abbreviated oct)-----------------------------------------------------------
+    app.get('/oct',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "oct";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 10 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/oct', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+      });
+
+      //------------------------------------------------------November (abbreviated nov)-----------------------------------------------------------
+    app.get('/nov',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "nov";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 11 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/nov', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+      });
+
+      // ------------------------------------------------------December (abbreviated dec)-----------------------------------------------------------
+    app.get('/dec',async (req,res)=>{
+   
+      try {
+          const username = req.session.user.username; // Get the logged-in username
+          console.log("username logged in RIGHT NOW: ", username);
+          const month = "dec";
+          const expenses = await db.query('SELECT * FROM Income_Expense WHERE Monthh = 12 AND Username = $1', [username]);
+          console.log("expenses", expenses);
+ 
+          res.render('pages/months/dec', { expenses,month });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+       
+      });
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+// ------------------------------------------------------POST API CALLS BELOW -----------------------------------------------------------
+
+
+//Login POST API
     app.post('/login', async (req,res)=>{
       let query = `SELECT * FROM users WHERE users.username = '${req.body.username}'`;
-      await db.one(query, req.body.username) 
+      await db.one(query, req.body.username)
       .then((data)=>{
           user.username = data.username;
           user.password = data.password;
       })
-  
+ 
       .catch((err) => {
         //if user isnt in database
           if(user.password == undefined){
@@ -122,7 +405,7 @@ const express = require("express");
               message: "Unable to populate database"
           });}
       });
-      
+     
       if(user.password != undefined){
           const match = await bcrypt.compare(req.body.password, user.password);
           if(match == true){
@@ -140,130 +423,62 @@ const express = require("express");
           };
       }
   });
-  
-    app.post('/addExpenseJan', async (req, res) => {
-      try {
-          // Extract expense details from the request body
-          const { category, amount, label } = req.body;
-          console.log("full request: ", req.originalUrl);
-          //const clickedMonth=req.query.clickedMonth; //extract the clicked month from the query string TBD?
-          
-  
-          // Validate input if needed
-  
-          // Perform the database insertion (assumes you have a db object connected to your database)
-          const username = req.session.user.username;
-          console.log("session saved, usename in add expense", username);
-          const result = await db.query(
-            `INSERT INTO Income_Expense (Category, Amount, Label, Monthh) VALUES ('${req.body.category}', '${req.body.amount}','${req.body.label}',1) RETURNING *`
-        );
-      
-             // console.log("result.rows[0].Index_ID", result.rows[0].Index_ID);
 
-              //print the index id of the inserted value: 
-              
-              // const indexId = result.rows[0].Index_ID;
-                // Extract the month from the URL
-         // const currentMonth = req.originalUrl.replace('/', '');
 
+  //AddExpense POST API
+  app.post('/addExpense/:month', async (req, res) => {
+    try {
+      console.log("req.params", req.params);
+      const month=req.params.month;
+      console.log("month", month);
+
+      const monthToNumber = {
+        jan: 1, feb: 2, march: 3, april: 4, may: 5, june: 6,
+        july: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+      };
+      const monthNumber = monthToNumber[month];
+      console.log("month number", monthNumber);
+        // Extract expense details from the request body
+        const { category, amount,label } = req.body;
+
+        // Perform the database insertion
+        const username = req.session.user.username;
+        console.log("session saved, usename in add expense", username);
+        console.log(monthNumber);
+        const result = await db.query(
+          'INSERT INTO Income_Expense (Username, Category, Amount, Label, Monthh) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+          [username,category, amount, label, monthNumber]
+      );
           // Redirect back to the month page after adding the expense
-          res.redirect('/jan');
+          res.redirect(`/${month}`);
       } catch (error) {
           console.error('Error adding expense:', error);
           // Handle the error appropriately (e.g., render an error page)
           res.status(500).send('Internal Server Error');
       }
   });
-  
-  //DELETE Expense
-  app.post('/deleteExpense', async (req, res) => {
+ 
+  //DELETE Expense POST API
+  app.post('/deleteExpense/:month', async (req, res) => {
     try {
+        const month = req.params.month;
         const expenseId = req.body.expenseId;
-
-        const countQuery = 'SELECT COUNT(*) FROM Income_Expense';
-        console.log("countQuery",countQuery);
-        const result = await db.query(countQuery);
-        console.log("resule", result);
-
-        const remainingExpenses = result.count;
-        console.log("expenses remaining", remainingExpenses);
-
+        console.log("expense Id", expenseId);
 
         // Perform the deletion operation in the database
         const deleteQuery = 'DELETE FROM Income_Expense WHERE Index_ID = $1';
         await db.query(deleteQuery, [expenseId]);
 
-        // If there is only one element left, truncate the table
-        if (result === 1) {
-          console.log("in if remain expenses =1");
-          const resetSequenceQuery = 'TRUNCATE Income_Expense RESTART IDENTITY';
-          await db.query(resetSequenceQuery);
-      }
-
-        // Update IDs of remaining expenses
-        const updateIdsQuery = 'UPDATE Income_Expense SET Index_ID = Index_ID - 1 WHERE Index_ID > $1';
-        await db.query(updateIdsQuery, [expenseId]);
-
-         // Reset the sequence when all expenses are deleted
-        //  const resetSequenceQuery = 'TRUNCATE Income_Expense RESTART IDENTITY';
-        //  await db.query(resetSequenceQuery);
-
         // Redirect back to the January page or any other page you prefer
-        res.redirect('/jan');
+        res.redirect(`/${month}`);
     } catch (error) {
         console.error('Error deleting expense:', error);
         // Handle the error appropriately, e.g., send an error response
         res.status(500).send('Internal Server Error');
     }
-});
+});  
 
-  app.get('/expenses', async (req, res) => {
-    try {
-      //  get expenses from the table using a query 
-      const expenses = await db.query('SELECT * FROM Income_Expense');
-      res.json(expenses.rows);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-
- 
-  app.get("/",(req,res)=>{
-    res.render("pages/home");
-  });
-
-
-  app.get("/logout", (req, res) => {
-    res.render("pages/logout");
-  });
-
-
-  app.get("/home", (req, res) => {
-    res.render("pages/home");
-  });
-
-
-
-
-  app.get('/welcome', (req, res) => {
-    res.json({status: 'success', message: 'Welcome!'});
-  });
-
-
-  //LOGIN GET API
-  app.get('/login', (req,res)=>
-  {
-    res.render('pages/login'); //render the login.ejs page
-  });
-
-
-  // REGISTER GET API
-  app.get('/register', (req, res) => {
-    res.render('pages/register'); // Render the register.ejs page
-  });
- 
-   //POST register 
+  //POST register API
    app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
     const hash = await bcrypt.hash(req.body.password, 10);
@@ -283,8 +498,7 @@ const express = require("express");
     });
   });
 
- 
-
+  //user authorization (if the user's session is not saved, redirect to login page)
 const auth = (req, res, next) => {
   if (!req.session.user) {
     // Default to login page.
@@ -296,78 +510,5 @@ const auth = (req, res, next) => {
 // Authentication Required
 app.use(auth);
 
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  
-  res.render('pages/login',{
-    error:false,
-    message: "Logged out successfully!"
-  });
-});
-
-
 module.exports = app.listen(3000);
 console.log("Server is listening on port 3000");
-
-//     // Assuming you have logic to fetch the months based on your application's requirements
-//     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-//     // Assuming you have logic to fetch user-specific budget data
-//     // Replace the sample logic with your actual logic
-//     const userSpecificExpenses = await db.any('SELECT * FROM Users_to_Budget WHERE Username = $1', [req.session.user.username]);
-     
-//     // Fetch existing budget data for each month
-//     // const budgetData = await db.any('SELECT * FROM User_Budget WHERE Username = $1', [req.session.user.username]);
-
-
-//     res.render("pages/budget", {
-//       showExpenseModal: true,
-//       expenses: userSpecificExpenses,
-//       action: req.query.taken ? 'delete' : 'add',
-//       months: months, // Pass the months variable to the template
-//       // budgetData: budgetData,
-//     });
-//   } catch (error) {
-//     console.error('Error fetching user-specific expenses:', error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
-// });
-
-
-
-// // POST API to add an expense
-// app.post('/addExpense',  (req, res) =>
-//  {
-//   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-//   const userSpecificExpenses =  db.any('SELECT * FROM Users_to_Budget WHERE Username = $1', [req.session.user.username]);
-//   res.render("pages/budget", {
-//     showExpenseModal: true,
-//     expenses: userSpecificExpenses,
-//     action: req.query.taken ? 'delete' : 'add',
-//     months: months, // Pass the months variable to the template
-//     // budgetData: budgetData,
-//   });
-//   //res.render("pages/budget");// {showExpensePopup: true});
-  
-// });
-
-// POST API to remove an expense
-// app.post('/removeExpense', async (req, res) => {
-//   try {
-//     const { indexId } = req.body;
-
-
-//     // Delete the expense from the Budget_to_Income table
-//     await db.none('DELETE FROM Budget_to_Income WHERE Index_ID = $1', [indexId]);
-
-
-//     // Delete the expense from the Income_Expense table
-//     await db.none('DELETE FROM Income_Expense WHERE Index_ID = $1', [indexId]);
-
-
-//     // Send a success response
-//     res.status(200).json({ message: 'Expense removed successfully', indexId });
-//   } catch (error) {
-//     console.error('Error removing expense:', error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
-// });

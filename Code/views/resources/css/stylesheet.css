@@ -101,3 +101,37 @@ ul,li{
     font-size: 25px;
     margin: 10px;
 }
+
+#budget-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    font-family: "Tahoma", sans-serif;
+    text-align: center;
+    color:#616161;
+    text-shadow: 2px 2px 2px white;
+    font-size: 70px;
+}
+
+#budget-menu{
+    float: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 8px solid #9CCC65;
+    border-style: groove;
+    width: 2000px;
+}
+#budget-menu-text{
+    font-family: "Tahoma", sans-serif;
+    color:#616161;
+    font-size: 25px;
+}
+
+#add-expense-button{
+    width:20px;
+    background-color: black;
+}
+

@@ -9,19 +9,22 @@ crossorigin="anonymous">
 </script>
 
 <main>
+  <link href="/resources/css/stylesheet.css" rel="stylesheet" type="text/css">
     <div class="container">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1>December Budget</h1>
+      <h1 id="budget-title">December Budget</h1>
       <%- include ('../../partials/budgetNav') %>
-
+    
+      
 
       <!--Modal Section-->
        <!-- Button to trigger the modal -->
-       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+       <button type="button"id="add-expense-button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
         Add Expense
     </button>
 
     <!-- Modal for adding expenses -->
+    
     <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -31,7 +34,7 @@ crossorigin="anonymous">
                 </div>
                 <div class="modal-body">
                     <!-- Your form for adding expenses -->
-                    <form id="addExpenseForm" method="post" action="/addExpense">
+                    <form id="addExpenseForm" method="post" action="/addExpense/<%= month %>">
                         <!-- Add input fields here for the expense details -->
                         <div class="mb-3">
                             <label for="category" class="form-label">Category:</label>
@@ -47,12 +50,7 @@ crossorigin="anonymous">
                         </div>
                         <div class="mb-3">
                             <label for="amount" class="form-label">Amount:</label>
-                            <input type="number" class="form-control" id="amount" name="amount" oninput="updateTotal()" required >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="total" class="form-label">Total:</label>
-                            <input type="number" class="form-control" id="total" name="total" readonly>
+                            <input type="number" class="form-control" id="amount" name="amount" required >
                         </div>
 
                         <div class="mb-3">
@@ -74,54 +72,83 @@ crossorigin="anonymous">
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Index ID</th>
+              <th scope="col">Expense_ID</th>
               <th scope="col">Category</th>
               <th scope="col">Amount</th>
-              <th scope="col">Total</th>
               <th scope="col">Label</th>
               <th scope="col">Actions</th> <!-- Add this column for Delete button -->
             </tr>
           </thead>
           <tbody>
+            <% let count = 1; %>
             <% expenses.forEach(expense => { %>
               <tr>
-                <td><%= expense.index_id %></td>
+                <td><%= count %></td>
                 <td><%= expense.category %></td>
                 <td><%= expense.amount %></td>
-                <td><%= expense.total %></td>
                 <td><%= expense.label %></td>
               
               <!-- Add a form for each expense with a delete button -->
               <td>
                 <!-- Move the form here so that it is within the same table row -->
-                <form method="post" action="/deleteExpense">
+                <form method="post" action="/deleteExpense/<%= month %>">
                     <input type="hidden" name="expenseId" value="<%= expense.index_id %>">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </td>
             </tr>
+            <% count += 1; %>
             <% }); %>
+
           </tbody>
         </table>
       <% } else { %>
-        <p>No expenses found for February.</p>
+        <p>No expenses found for December.</p>
       <% } %>
     
 
-      <!--Function to update the total -->
-      <script>
-        function updateTotal() {
-            // Get the value from the Amount input
-            const amountInput = document.getElementById('amount');
-            const amountValue = parseFloat(amountInput.value) || 0;
+      <!--Function for Pie Chart -->
     
-            // Update the Total input with the calculated value
-            const totalInput = document.getElementById('total');
-            totalInput.value = amountValue.toFixed(2); // Assuming we want two decimal places
-        }
-    </script>
+<script>
+window.onload = function() {
+  console.log("in finction for onlaod dec");
+  var month = '<%= month %>';
+  console.log("month in function", month);
 
+  fetch(`/getChartData/${month}`)
+    .then(response => response.json())
+    .then(dataPoints => {
 
+    if (dataPoints.length > 0) {
+    var chart = new CanvasJS.Chart("chartContainer", {
+    animationEnabled: true,
+    title:{
+    
+      text: "Summary for December",
+      horizontalAlign: "left"
+    },
+    data: [{
+      type: "doughnut",
+      startAngle: 60,
+      //innerRadius: 60,
+      indexLabelFontSize: 17,
+      indexLabel: "{label} - #percent%",
+      toolTipContent: "<b>{label}:</b> {y} (#percent%)",
+      dataPoints: dataPoints
+    }]
+  });
+  chart.render();
+}
+ 
+  })
+  .catch(error => {
+      console.error('Error fetching data for chart:', error);
+      // Handle the error if needed
+    });
+  }
+  </script>
+  <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+  <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
   </main>
 
   <%- include ('../../partials/footer') %>
