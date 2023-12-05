@@ -9,16 +9,17 @@ crossorigin="anonymous">
 </script>
 
 <main>
+  <link href="/resources/css/stylesheet.css" rel="stylesheet" type="text/css">
     <div class="container">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1>April Budget</h1>
+      <h1 id="budget-title">April Budget</h1>
       <%- include ('../../partials/budgetNav') %>
     
       
 
       <!--Modal Section-->
        <!-- Button to trigger the modal -->
-       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+       <button type="button" id="add-expense-button"class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
         Add Expense
     </button>
 

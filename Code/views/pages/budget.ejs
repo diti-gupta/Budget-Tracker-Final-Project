@@ -9,13 +9,13 @@ crossorigin="anonymous">
 </script>
 
 <main>
+  <link href="/resources/css/stylesheet.css" rel="stylesheet" type="text/css">
     <div class="container">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1>Yearly Budget</h1>
+      <h1 id="budget-title">Yearly Budget</h1>
       <%- include ('../partials/budgetNav') %>
     
       <!--Function for Pie Chart -->
-    
   <script>
   window.onload = function() {
     console.log("in function for onload year");
@@ -28,7 +28,6 @@ crossorigin="anonymous">
       var chart = new CanvasJS.Chart("chartContainer", {
       animationEnabled: true,
       title:{
-      
         text: "Summary of Year",
         horizontalAlign: "left"
       },
