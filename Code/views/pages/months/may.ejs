@@ -20,16 +20,16 @@ crossorigin="anonymous">
       <!--Modal Section-->
        <!-- Button to trigger the modal -->
        <button type="button" id="add-expense-button"class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
-        Add Expense
+        Add Income or Expense
     </button>
 
     <!-- Modal for adding expenses -->
     
     <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content"  id="add-expense-box">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addExpenseModalLabel">Add Expense</h5>
+                    <h5 class="modal-title" id="addExpenseModalLabel">Add Income or Expense</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -60,7 +60,7 @@ crossorigin="anonymous">
 
                         <!-- Add more fields as needed -->
 
-                        <button type="submit" class="btn btn-primary">Add Expense</button>
+                        <button type="submit" id="submit-expense-button" class="btn btn-primary">Add Income or Expense</button>
                     </form>
                 </div>
             </div>
@@ -69,14 +69,14 @@ crossorigin="anonymous">
     <!--Diplay existing expenses-->
       <% if (expenses && expenses.length > 0) { %>
         <% console.log("in expenses")%>
-        <table class="table">
+        <table class="table" id="budget-table">
           <thead>
             <tr>
-              <th scope="col">Expense_ID</th>
-              <th scope="col">Category</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Label</th>
-              <th scope="col">Actions</th> <!-- Add this column for Delete button -->
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Expense_ID</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Category</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Amount</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Label</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Actions</th> <!-- Add this column for Delete button -->
             </tr>
           </thead>
           <tbody>
