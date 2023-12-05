@@ -13,7 +13,7 @@ crossorigin="anonymous">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
       <h1>Yearly Budget</h1>
       <%- include ('../partials/budgetNav') %>
-    
+      
       <!--Function for Pie Chart -->
     
   <script>
@@ -53,6 +53,10 @@ crossorigin="anonymous">
     }
     </script>
     <div id="chartContainer" style="height: 500px; width: 100%;"></div>
+    <div class="container">
+    <h1>Net income: fetch('/getNetIncome')</h1>
+
+    </div>
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
   </main>
 

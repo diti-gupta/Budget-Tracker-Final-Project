@@ -140,6 +140,24 @@ app.get('/expenses', async (req, res) => {
     }
   });
 
+
+  app.get("/getNetIncome", async (req, res) => {
+    try {
+      const username = req.session.user.username;
+        console.log("username in chart", username);
+        const pos = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 AND Category = $1', [username]);
+        const neg = await db.query('SELECT Category, SUM(Amount) AS Total FROM Income_Expense WHERE Username = $1 AND Category = $2, 3$, $4, $5, $6', [username]);
+        const result = pos - neg;
+        console.log("Result of pos - neg:", result);
+        res.json(result);
+    } catch (error) {
+      console.error('Error fetching data for net income:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  
+
   app.get('/getChartDataYear', async (req, res) => {
     try {
       console.log("in get chart Data");
