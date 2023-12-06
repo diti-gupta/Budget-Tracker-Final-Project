@@ -27,7 +27,7 @@ Will Davidson, Logan Brown, Diti Gupta, Jillian Bartz, Adam Fox, Rishi Hancock
 | Agile                   | Deployment Environment           | 
 | Mocha, Chai             | Testing                          | 
 | Bootstrap               |  CSS Framework                   |
-| Lucid Chart, Designs.Ai | Additonal Tools to create Charts | 
+| Lucid Chart, Designs.Ai | Additonal Tools                  | 
 
 
 
