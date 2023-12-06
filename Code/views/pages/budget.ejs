@@ -18,7 +18,7 @@ crossorigin="anonymous">
     
       <!--Function for Pie Chart -->
 
-      <p id="demo"></p>
+      <p id="no-expense-found-year"></p>
   <script>
   window.onload = function() {
     console.log("in function for onload year");
@@ -113,7 +113,7 @@ crossorigin="anonymous">
                     chart2.render();
                   }
                   else{
-                    document.getElementById("demo").innerHTML = "No income or expenses found.";
+                    document.getElementById("no-expense-found-year").innerHTML = "No income or expenses found.";
                   }
                 })
                 .catch(error => {
