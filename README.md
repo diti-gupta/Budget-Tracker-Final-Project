@@ -17,16 +17,19 @@ Will Davidson, Logan Brown, Diti Gupta, Jillian Bartz, Adam Fox, Rishi Hancock
 
 ## Tech Stack:  
 
-|Tools Used | Specific Tool |Reason for Use |
-| --- | --- |
-| Project Tracker | Github Project Board |
-| VCS Repository  | Github |
-| Database | SQL |
-| IDE | Visual Studio Code |
-| UI Tools | HTML, EJS, CSS | 
-| Deployment Environment | Agile |
-| Testing Tools | Mocha, Chai |
-| Additional Tools | Lucid Chart, Designs.Ai |
+|     Program/Tools       |       Reason for Use             |        
+|-------------------------|----------------------------------|
+| Github Project Board    | Project Tracker                  | 
+| Github                  | VCS Repository                   | 
+| SQL                     | Database                         | 
+| Visual Studio Code      | IDE                              | 
+| HTML, EJS, CSS          | UI Tools                         | 
+| Agile                   | Deployment Environment           | 
+| Mocha, Chai             | Testing                          | 
+| Bootstrap               |  CSS Framework                   |
+| Lucid Chart, Designs.Ai | Additonal Tools to create Charts | 
+
+
 
 ## Prerequisites to Run: 
 Have Docker installed and running in the background
