@@ -1,59 +1,81 @@
-<%- include ('../partials/header') %>
-<div class="col"><%- include ('../partials/message') %></div>
+<%- include('../partials/header') %>
+<div class="col"><%- include('../partials/message') %></div>
 
-<!-- Adding Bootstrap JavaScript-->
-<script
-src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-crossorigin="anonymous">
-</script>
+<!-- Adding Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js.bootstrap.bundle.min.js"></script>
 
 <main>
     <div class="container">
-      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1>Yearly Budget</h1>
-      <%- include ('../partials/budgetNav') %>
-    
-      <!--Function for Pie Chart -->
-    
-  <script>
-  window.onload = function() {
-    console.log("in function for onload year");
+        <h1>Yearly Budget</h1>
+        <%- include('../partials/budgetNav') %>
 
-    fetch(`/getChartDataYear`)
-      .then(response => response.json())
-      .then(dataPoints => {
+        <div id="chartContainer" style="height: 500px; width: 100%;"></div>
+        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 
-      if (dataPoints.length > 0) {
-      var chart = new CanvasJS.Chart("chartContainer", {
-      animationEnabled: true,
-      title:{
-      
-        text: "Summary of Year",
-        horizontalAlign: "left"
-      },
-      data: [{
-        type: "doughnut",
-        startAngle: 60,
-        //innerRadius: 60,
-        indexLabelFontSize: 17,
-        indexLabel: "{label} - #percent%",
-        toolTipContent: "<b>{label}:</b> {y} (#percent%)",
-        dataPoints: dataPoints
-      }]
-    });
-    chart.render();
-  }
-  
-    })
-    .catch(error => {
-        console.error('Error fetching data for chart:', error);
-        // Handle the error if needed
-      });
-    }
-    </script>
-    <div id="chartContainer" style="height: 500px; width: 100%;"></div>
-    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-  </main>
+        <script>
+            window.onload = function () {
+                fetch('/getChartDataYearbyMonth')
+                    .then(response => response.json())
+                    .then(data => {
+                        var monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+                        var categories=new Set(data.map(item=>item.label));
+                        var chartt = [];
+                        categories.forEach(category => {
+                            var seriesData=monthNames.map((month,index) => {
+                                var monthData=data.find(d=>d.month===index+1&&d.label===category);
+                                return {
+                                    label: month,
+                                    y: monthData ? monthData.y : 0
+                                };
+                            });
+                            chartt.push({
+                                type: "stackedBar",
+                                name: category,
+                                showInLegend: true,
+                                dataPoints: seriesData
+                            });
+                        });
 
-  <%- include ('../partials/footer') %>
+                        var chart=new CanvasJS.Chart("chartContainer",{
+                            animationEnabled: true,
+                            title: {
+                                text: "Monthly Expense Breakdown"
+                            },
+                            axisX: {
+                                title: "Months",
+                                interval: 1,
+                                labelAngle: -45
+                            },
+                            axisY: {
+                                title: "Amount",
+                                prefix: "$"
+                            },
+                            toolTip: {
+                                shared: true
+                            },
+                            legend: {
+                                cursor: "pointer",
+                                itemclick: toggleDataSeries
+                            },
+                            data: chartt
+                        });
+                        chart.render();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data for chart:', error);
+                    });
+            };
+
+            function toggleDataSeries(e) {
+                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+                e.chart.render();
+            }
+        </script>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>
