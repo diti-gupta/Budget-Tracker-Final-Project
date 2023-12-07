@@ -138,6 +138,16 @@ ul,li{
     font-size: 15px;
 }
 
+#logout-button{
+    position: absolute;
+    top: 5px !important;
+    right: 60px !important;
+    width: 90px !important;
+    max-width: 100% !important;
+    font-size: 20px !important;
+    background-color: #848484;
+}
+
 #add-expense-button{
     position:relative; 
     margin-top:8%; 
