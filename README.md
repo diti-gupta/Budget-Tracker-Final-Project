@@ -35,20 +35,18 @@ Will Davidson, Logan Brown, Diti Gupta, Jillian Bartz, Adam Fox, Rishi Hancock
 Have Docker installed and running in the background
 
 ## Running the Application Locally:  
-docker compose up
+After cloning the repositry, navigate to the "Code" folder using command: "cd Code" 
 
-(for website to run locally, `app.listen(3000);` needs to be at the bottom of index.js instead of `module.exports = app.listen(3000);`)
+Start application by running **"docker compose up"**
+
+Navigate to "http://localhost:3000/"
 
 ## Running Tests: 
-docker compose down -v
+In the **docker-compose.yaml**, go to the command section. Change the command from: **"npm run testandrun"** to **"npm start"**. 
 
-docker compose up
+Run **"docker compose down --volumes"** and recompose docker again with **"docker compose up"**. 
 
-OR  
-
-docker compose down -v  
-
-docker-compose run web npm test  
+This sequence will run the tests correctly
 
 ## Link to Deployed Application:  
 http://recitation-12-team-04.eastus.cloudapp.azure.com:3000/
