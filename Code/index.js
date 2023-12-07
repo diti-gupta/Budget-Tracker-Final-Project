@@ -60,6 +60,30 @@ const express = require("express");
   };
 
 
+//DELETE user API Endpoint to delete a user
+
+app.delete('/unregister', async (req, res) => {
+  const { username } = req.body;
+  // console.log("inside unregister");
+  // console.log("username: ", username);
+
+  try {
+    const deleteQuery = 'DELETE FROM users WHERE username = $1 RETURNING *';
+    // console.log("delete Query", deleteQuery);
+    const result = await db.oneOrNone(deleteQuery, [username]);
+    // console.log("result", result);
+
+    if (result) {
+      res.status(200).send('User unregistered successfully');
+    } else {
+      res.status(404).send('User not found');
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 
 //GET pages API
 app.get("/",(req,res)=>{

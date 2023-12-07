@@ -62,17 +62,43 @@ then the next time one runs the test case with the same username: newuser, the p
 in the previous test case run, the newuser gets added to the database because they did NOT exist at that moment in time. 
 In the rerun, the newuser exists in the database, thus the username has to be a different username for EACH rerun of the test cases.*/
 
+
+/* So that there is no need for the postive test case to be updated with a new user EVERY TIME one reruens the test cases,
+ we have implemented an unregister endpoint that allows for the registed user from the postive register test case to be unregistered 
+ after it passes the positive register test case. In other words, we are first registering a new user, and the positive register test 
+ case should pass however we are also unregistering the newly registered user right after the postive register test case so that there 
+ is no need to register a new user each time, and so that the positive register test case can pass each time as we have registered the 
+ new user then deleted/unregistered it from the database. */
+
+
 // Positive test case for user registration
-// it('Positive: /register', (done) => {
-//   chai
-//     .request(server)
-//     .post('/register')
-//     .send({ username: 'newestuser1', password: 'abc' })
-//     .end((err, res) => {
-//       expect(res).to.have.status(200); // Expect a redirect status for successful registration
-//       done();
-//     });
-// });
+it('Positive: /register', (done) => {
+  chai
+    .request(server)
+    .post('/register')
+    .send({ username: 'newestuser1', password: 'abc' })
+    .end((err, res) => {
+      expect(res).to.have.status(200); // Expect a redirect status for successful registration
+      
+     done();
+  });
+  });
+
+  // Unregistering/deleting newestuser1, so that the postive user registration test case can pass any time one runs it
+  it('Register deltion: /unregister', (done) => {
+    chai
+      .request(server)
+      .delete('/unregister') // call the DELETE endpoint for user deletion
+      .send({ username: 'newestuser1' })
+      .end((err, res) => {
+        // expect a successful unregistration
+        expect(res).to.have.status(200);
+
+        done();
+      });
+    });
+  
+
 
 // Negative test case for user registration with an existing username
 it('Negative: /register. Checking existing username', (done) => {
