@@ -1,4 +1,5 @@
 <%- include ('../../partials/header') %>
+<%- include ('../../partials/logoutNav') %>
 <div class="col"><%- include ('../../partials/message') %></div>
 
 <!-- Adding Bootstrap JavaScript-->
@@ -9,26 +10,27 @@ crossorigin="anonymous">
 </script>
 
 <main>
+  <link href="/resources/css/stylesheet.css" rel="stylesheet" type="text/css">
     <div class="container">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1>September Budget</h1>
+      <h1 id="budget-title">September Budget</h1>
       <%- include ('../../partials/budgetNav') %>
     
       
 
       <!--Modal Section-->
        <!-- Button to trigger the modal -->
-       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
-        Add Expense
+       <button type="button"id="add-expense-button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+        Add Income or Expense
     </button>
 
     <!-- Modal for adding expenses -->
     
     <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content"  id="add-expense-box">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addExpenseModalLabel">Add Expense</h5>
+                    <h5 class="modal-title" id="addExpenseModalLabel">Add Income or Expense</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -59,7 +61,7 @@ crossorigin="anonymous">
 
                         <!-- Add more fields as needed -->
 
-                        <button type="submit" class="btn btn-primary">Add Expense</button>
+                        <button type="submit" id="submit-expense-button" class="btn btn-primary">Add Income or Expense</button>
                     </form>
                 </div>
             </div>
@@ -68,26 +70,33 @@ crossorigin="anonymous">
     <!--Diplay existing expenses-->
       <% if (expenses && expenses.length > 0) { %>
         <% console.log("in expenses")%>
-        <table class="table">
+        <table class="table" id="budget-table">
           <thead>
             <tr>
-              <th scope="col">Expense_ID</th>
-              <th scope="col">Category</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Label</th>
-              <th scope="col">Actions</th> <!-- Add this column for Delete button -->
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Expense ID</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Category</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Amount</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Label</th>
+              <th scope="col" style="color:#616161; text-shadow: 2px 2px 2px white; font-size: 23px;">Actions</th> <!-- Add this column for Delete button -->
             </tr>
           </thead>
           <tbody>
             <% let count = 1; %>
             <% expenses.forEach(expense => { %>
-              <tr>
+              <%if (expense.category == 'Transportation' || expense.category == 'Food' || expense.category == 'Entertainment' || expense.category == 'Other'){%>
+              <tr style="background-color: rgb(200, 130, 130);">
                 <td><%= count %></td>
-                <td><%= expense.category %></td>
+                <td ><%= expense.category %></td>
                 <td><%= expense.amount %></td>
                 <td><%= expense.label %></td>
-              
+              <%}else if (expense.category == 'Salary' || expense.category == 'Investments'){%>
+                <tr style="background-color: rgb(133, 180, 133);">
+                  <td><%= count %></td>
+                  <td ><%= expense.category %></td>
+                  <td><%= expense.amount %></td>
+                  <td><%= expense.label %></td>
               <!-- Add a form for each expense with a delete button -->
+              <%}%>
               <td>
                 <!-- Move the form here so that it is within the same table row -->
                 <form method="post" action="/deleteExpense/<%= month %>">
@@ -102,7 +111,7 @@ crossorigin="anonymous">
           </tbody>
         </table>
       <% } else { %>
-        <p>No expenses found for September.</p>
+        <p id="no-expense-found">No income or expenses found for September.</p>
       <% } %>
     
 
@@ -120,9 +129,12 @@ window.onload = function() {
 
     if (dataPoints.length > 0) {
     var chart = new CanvasJS.Chart("chartContainer", {
-    animationEnabled: true,
-    title:{
-    
+      backgroundColor: "#D2D2D2",
+      animationEnabled: true,
+      title:{
+        fontFamily: "Tahoma",
+        fontStyle: "bold",
+        fontColor: "#616161",
       text: "Summary for September",
       horizontalAlign: "left"
     },
