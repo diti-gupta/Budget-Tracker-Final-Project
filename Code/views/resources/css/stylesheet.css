@@ -1,0 +1,241 @@
+
+html,body{
+    background-color: #D2D2D2;
+}
+
+.btn-primary:hover{
+    cursor: pointer;
+    background-color: #58733a;
+}
+
+#logo-img{
+    position: absolute;
+    top: 40%;
+    left: 9%;
+    display: block;
+    width:  40%;
+    height: 20%;
+    max-width: 100%;
+    height:auto;
+}
+
+#logo-img-login{
+    display: block;
+    margin: auto;
+    width: 250px;
+}
+
+#title{
+    font-family: "Tahoma", sans-serif;
+    position:absolute;
+    top: 40%;
+    left: 53%;
+    color:white;
+    text-shadow: 2px 2px 2px gray;
+    max-width: 100%;
+    height:auto;
+}
+
+.btn-primary{
+    background-color: #9CCC65;
+    color:white;
+    border:none;
+    position:absolute;
+    top: 50%;
+    left: 53%;
+    width:500px;
+    height: 60px;
+    font-size:30px;
+    font-family: "Tahoma", sans-serif;
+    text-shadow: 2px 2px 2px gray;
+    max-width: 100%;
+    height:auto;
+}
+
+#user-title{
+    font-family: "Tahoma", sans-serif;
+    text-align: center;
+    color:#616161;
+    text-shadow: 2px 2px 2px white;
+    font-size: 50px;
+}
+
+label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-family: "Tahoma", sans-serif;
+    color:white;
+    text-shadow: 2px 2px 2px gray;
+    font-size: 20px;
+}
+
+input{
+    font-family: "Tahoma", sans-serif;
+    display: block;
+    margin:30px auto;
+    color:#616161;
+    border-color: white;
+    background-color: #C6C6C6;
+}
+
+#register-reminder{
+    font-family: "Tahoma", sans-serif;
+    display: block;
+    text-align: center;
+    color:white;
+    font-size: 15px;
+}
+
+#info-box{
+    border: 3px solid #9CCC65;
+    border-style: groove;
+    padding:10px;
+    width: 400px;
+}
+
+ul,li{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+}
+
+#menu{
+    font-family: "Tahoma", sans-serif;
+    color:#616161;
+    font-size: 25px;
+    margin: 10px;
+}
+
+#budget-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    font-family: "Tahoma", sans-serif;
+    text-align: center;
+    color:#616161;
+    text-shadow: 2px 2px 2px white;
+    font-size: 70px;
+}
+
+#budget-menu{
+    float: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 8px solid #9CCC65;
+    border-style: groove;
+    width: 2000px;
+    max-width: 100%;
+}
+#budget-menu-text{
+    font-family: "Tahoma", sans-serif;
+    color:#616161;
+    font-size: 15px;
+}
+
+#logout-button{
+    position: absolute;
+    top: 5px !important;
+    right: 60px !important;
+    width: 90px !important;
+    max-width: 100% !important;
+    font-size: 20px !important;
+    background-color: #848484;
+}
+
+#add-expense-button{
+    position:relative; 
+    margin-top:8%; 
+    left:50%; 
+    transform: translate(-50%, -50%);
+    font-family: "Tahoma", sans-serif;
+    max-width: 100%;
+}
+
+#submit-expense-button{
+    font-size: 25px;
+    width:300px;
+    max-width: 100%;
+    left:50%; 
+    transform: translate(-50%, -50%);
+    top: 110%;
+}
+
+#budget-table{
+    text-align: center;
+    font-family: "Tahoma", sans-serif;
+    color:#616161;
+    font-size: 20px;
+}
+
+#add-expense-box{
+    border: 2px solid #9CCC65;
+    border-style: groove;
+    background-color: #616161;
+}
+
+#addExpenseModalLabel{
+    font-family: 'Tahoma', sans-serif; 
+    color:white;
+    font-size: 25px;
+}
+
+#category, #amount, #label{
+    font-family: "Tahoma", sans-serif;
+    color:white;
+    border-color: white;
+    background-color: #7e7e7e;
+}
+
+.chart{
+    background-color: black;
+    font-size: 100px;
+}
+
+#no-expense-found{
+    font-family: "Tahoma", sans-serif;
+    color:#616161;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#logout-text{
+    font-family: "Tahoma", sans-serif;
+    position:absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color:white;
+    text-shadow: 2px 2px 2px gray;
+    max-width: 100%;
+    height:auto;
+}
+
+#chartContainer{
+    margin-bottom: 80px;
+}
+
+#chartContainer1{
+    margin-top: 100px;
+    margin-bottom: 20px;
+}
+
+#chartContainer2{
+    margin-top: 100px;
+    margin-bottom: 200px;
+}
+
+#no-expense-found-year{
+    font-family: "Tahoma", sans-serif;
+    color:#616161;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

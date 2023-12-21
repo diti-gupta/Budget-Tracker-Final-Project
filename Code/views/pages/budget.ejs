@@ -1,11 +1,138 @@
 <%- include ('../partials/header') %>
-
+<%- include ('../partials/logoutNav') %>
 <div class="col"><%- include ('../partials/message') %></div>
+
+<!-- Adding Bootstrap JavaScript-->
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+crossorigin="anonymous">
+</script>
+
 <main>
+  <link href="/resources/css/stylesheet.css" rel="stylesheet" type="text/css">
     <div class="container">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1>Budget</h1>
+      <h1 id="budget-title">Yearly Budget</h1>
+      <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
       <%- include ('../partials/budgetNav') %>
+    
+      <!--Function for Pie Chart -->
+
+      <p id="no-expense-found-year"></p>
+  <script>
+  window.onload = function() {
+    console.log("in function for onload year");
+
+    fetch(`/getChartDataYear`)
+      .then(response => response.json())
+      .then(dataPoints => {
+
+      if (dataPoints.length > 0) {
+      var chart1 = new CanvasJS.Chart("chartContainer1", {
+      backgroundColor: "#D2D2D2",
+      animationEnabled: true,
+      title:{
+        fontFamily: "Tahoma",
+        fontStyle: "bold",
+        fontColor: "#616161",
+        text: "Summary of Year",
+        horizontalAlign: "left"
+      },
+      data: [{
+        type: "doughnut",
+        startAngle: 60,
+        indexLabelFontSize: 17,
+        indexLabel: "{label} - #percent%",
+        toolTipContent: "<b>{label}:</b> {y} (#percent%)",
+        dataPoints: dataPoints
+      }],
+    });
+    chart1.render();
+  }
+  
+    })
+    .catch(error => {
+        console.error('Error fetching data for chart:', error);
+        // Handle the error if needed
+      });
+            fetch('/getChartDataYearbyMonth')
+                .then(response => response.json())
+                .then(data => {
+                  if (data.length > 0) {
+                    var monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+                    var categories=new Set(data.map(item=>item.label));
+                    var chartt = [];
+                    categories.forEach(category => {
+                        var seriesData=monthNames.map((month,index) => {
+                            var monthData=data.find(d=>d.month===index+1&&d.label===category);
+                            return {
+                                label: month,
+                                y: monthData ? monthData.y : 0
+                            };
+                        });
+                        chartt.push({
+                            type: "stackedBar",
+                            name: category,
+                            showInLegend: true,
+                            dataPoints: seriesData
+                        });
+                    });
+
+                    var chart2=new CanvasJS.Chart("chartContainer2",{
+                        animationEnabled: true,
+                        backgroundColor: "#D2D2D2",
+                        title: {
+                          fontFamily: "Tahoma",
+                          fontStyle: "bold",
+                          fontColor: "#616161",
+                            text: "Monthly Expense Breakdown",
+                            horizontalAlign: "left"
+                        },
+                        axisX: {
+                          labelFontColor: "#616161",
+                          labelFontFamily: "Tahoma",
+                            title: "Months",
+                            interval: 1,
+                            labelAngle: -45
+                        },
+                        axisY: {
+                          labelFontColor: "#616161",
+                          labelFontFamily: "Tahoma",
+                            title: "Amount",
+                            prefix: "$"
+                        },
+                        toolTip: {
+                            shared: true
+                        },
+                        legend: {
+                            cursor: "pointer",
+                            itemclick: toggleDataSeries
+                        },
+                        data: chartt
+                    });
+                    chart2.render();
+                  }
+                  else{
+                    document.getElementById("no-expense-found-year").innerHTML = "Welcome to EZBudget! Please select a month and add your first income or expense!";
+                  }
+                })
+                .catch(error => {
+                    console.error('Error fetching data for chart:', error);
+                });
+        };
+
+        function toggleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            e.chart.render();
+        }
+    </script>
+    <div id="chartContainer1" style="height: 500px; width: 100%;"></div>
+    <div id="chartContainer2" style="height: 500px; width: 100%;"></div>
   </main>
 
-<%- include ('../partials/footer') %>
+  <%- include ('../partials/footer') %>

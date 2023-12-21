@@ -1,26 +1,32 @@
 
 <%- include ('../partials/header') %>
-<%- include ('../partials/footer') %>
+<%- include ('../partials/menu') %>
 <%- include ('../partials/message') %>
 
 <main>
-  <div class="container">
+  <link href="/resources/css/stylesheet.css" rel="stylesheet" type="text/css">
+  <img id="logo-img-login" src="../resources/images/EZBudget_Logo.png" alt= "Logo">
+  <div class="container" id="info-box">
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-    <div>
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
-    </div>
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-    </div>
-    <div>
-      <input type="submit" value="Login">
-    </div>
-  </form>
-  <p>If you don't have an account, <a href="/register">register here</a>.</p>
+    
+    <h1 id="user-title">Login</h1>
+    <p>
+      <form action="/login" method="POST">
+        <div>
+          <label id="username" for="username">Username</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div> 
+          <input type="submit" value="Login">
+        </div>
+      </form>
+    </p>
+    
+  <p id="register-reminder">If you don't have an account, <a href="/register">register here</a>.</p>
   </div>
 </main>
 
