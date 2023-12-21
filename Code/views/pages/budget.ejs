@@ -115,6 +115,7 @@ crossorigin="anonymous">
                   }
                   else{
                     document.getElementById("no-expense-found-year").innerHTML = "Welcome to EZBudget! Please select a month and add your first income or expense!";
+                    document.getElementById("no-expense-found-year").style.marginTop = "60px"; // Adjust the top margin
                   }
                 })
                 .catch(error => {

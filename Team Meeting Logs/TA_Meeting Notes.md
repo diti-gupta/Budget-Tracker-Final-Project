@@ -70,3 +70,23 @@ Follow Up items:
     - Continue updating the UAT
 
     - Finish database  
+
+
+Week 4: 12/6/2023: Meeting #4 with Shipra  (12 minutes long):
+
+Discussed progress on website
+
+    - Discussed front-end and back-end work along with test cases
+
+    - Ran a demo of the deployed website for Shipra
+
+    - Discussed work on the presentation  and slides for 12/7/2023 
+
+Decisions made:
+
+    - Change some front end work; specifically change positioning of logout button and change the titles of each month to be: {Month} instead of {Month Budget}
+
+
+Follow Up items:
+
+    - Work on presentation and present it tomorrow (12/7/2023)
